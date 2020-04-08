@@ -48,9 +48,6 @@ import no.nav.omsorgspenger.soker.søkerApis
 import no.nav.omsorgspenger.soknadOverforeDager.OmsorgpengesøknadMottakGateway
 import no.nav.omsorgspenger.soknadOverforeDager.søknadApis
 import no.nav.omsorgspenger.soknadOverforeDager.SøknadOverføreDagerService
-import no.nav.omsorgspenger.vedlegg.K9DokumentGateway
-import no.nav.omsorgspenger.vedlegg.VedleggService
-import no.nav.omsorgspenger.vedlegg.vedleggApis
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
@@ -128,12 +125,6 @@ fun Application.omsorgpengesoknadapi() {
 
     install(Routing) {
 
-        val vedleggService = VedleggService(
-            k9DokumentGateway = K9DokumentGateway(
-                baseUrl = configuration.getK9DokumentUrl()
-            )
-        )
-
         val omsorgpengesoknadMottakGateway =
             OmsorgpengesøknadMottakGateway(
                 baseUrl = configuration.getOmsorgpengesoknadMottakBaseUrl(),
@@ -177,11 +168,6 @@ fun Application.omsorgpengesoknadapi() {
                         RedisConfigurationProperties(
                             configuration.getRedisHost().equals("localhost"))
                         ).redisClient(configuration)), configuration.getStoragePassphrase()),
-                idTokenProvider = idTokenProvider
-            )
-
-            vedleggApis(
-                vedleggService = vedleggService,
                 idTokenProvider = idTokenProvider
             )
 
