@@ -26,8 +26,8 @@ spec:
       cpu: 200m
       memory: 512Mi
   ingresses:
-    - https://omsorgspengesoknad-api-q.nav.no
-    - https://omsorgspenger-api.nais.oera-q.local
+    - https://omsorgsdageroverforingsoknad-api-q.nav.no
+    - https://omsorgsdageroverforingsoknad-api.nais.oera-q.local
   replicas:
     min: 1
     max: 1
