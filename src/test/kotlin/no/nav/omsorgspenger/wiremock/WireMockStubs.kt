@@ -15,7 +15,6 @@ internal fun WireMockBuilder.omsorgspengesoknadApiConfig() = wireMockConfigurati
     it
         .extensions(SokerResponseTransformer())
         .extensions(BarnResponseTransformer())
-        .extensions(K9DokumentResponseTransformer())
 }
 
 
