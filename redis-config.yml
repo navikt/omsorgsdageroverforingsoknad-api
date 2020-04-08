@@ -3,7 +3,7 @@ kind: "Application"
 metadata:
   labels:
     team: dusseldorf
-  name: omsorgspenger-api-redis
+  name: omsorgspenger-api-redis #TODO Endre navn?
   namespace: default
 spec:
   image: redis:5-alpine # or a custom Redis-image
