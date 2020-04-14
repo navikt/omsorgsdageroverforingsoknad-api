@@ -11,7 +11,7 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
 class SøknadOverføreDagerService(
-    private val omsorgpengesøknadMottakGateway: OmsorgpengesøknadMottakGateway,
+    private val omsorgsdageroverforingsøknadMottakGateway: OmsorgsdageroverforingsøknadMottakGateway,
     private val søkerService: SøkerService
 ){
     private companion object {
@@ -44,7 +44,7 @@ class SøknadOverføreDagerService(
             fosterbarn = søknadOverføreDager.fosterbarn
         )
 
-        omsorgpengesøknadMottakGateway.leggTilProsesseringOverføreDager(
+        omsorgsdageroverforingsøknadMottakGateway.leggTilProsesseringOverføreDager(
             soknad = komplettSøknadOverføreDager,
             callId = callId
         )

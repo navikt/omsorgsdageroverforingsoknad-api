@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory
 import java.io.ByteArrayInputStream
 import java.net.URI
 
-class OmsorgpengesøknadMottakGateway(
+class OmsorgsdageroverforingsøknadMottakGateway(
     baseUrl: URI,
     private val accessTokenClient: AccessTokenClient,
     private val sendeSoknadTilProsesseringScopes: Set<String>,
@@ -31,7 +31,7 @@ class OmsorgpengesøknadMottakGateway(
 ) : HealthCheck {
 
     private companion object {
-        private val logger: Logger = LoggerFactory.getLogger(OmsorgpengesøknadMottakGateway::class.java)
+        private val logger: Logger = LoggerFactory.getLogger(OmsorgsdageroverforingsøknadMottakGateway::class.java)
         private val objectMapper = jacksonObjectMapper().dusseldorfConfigured()
             .setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
             .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)

@@ -45,7 +45,7 @@ import no.nav.omsorgsdageroverforingsoknad.redis.RedisStore
 import no.nav.omsorgsdageroverforingsoknad.soker.SøkerGateway
 import no.nav.omsorgsdageroverforingsoknad.soker.SøkerService
 import no.nav.omsorgsdageroverforingsoknad.soker.søkerApis
-import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.OmsorgpengesøknadMottakGateway
+import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.OmsorgsdageroverforingsøknadMottakGateway
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.søknadApis
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.SøknadOverføreDagerService
 import org.slf4j.Logger
@@ -125,8 +125,8 @@ fun Application.omsorgsdageroverforingsoknadapi() {
 
     install(Routing) {
 
-        val omsorgpengesoknadMottakGateway =
-            OmsorgpengesøknadMottakGateway(
+        val omsorgsdageroverforingsøknadMottakGateway =
+            OmsorgsdageroverforingsøknadMottakGateway(
                 baseUrl = configuration.getOmsorgpengesoknadMottakBaseUrl(),
                 accessTokenClient = accessTokenClientResolver.accessTokenClient(),
                 sendeSoknadTilProsesseringScopes = configuration.getSendSoknadTilProsesseringScopes(),
@@ -174,7 +174,7 @@ fun Application.omsorgsdageroverforingsoknadapi() {
             søknadApis(
                 idTokenProvider = idTokenProvider,
                 søknadOverføreDagerService = SøknadOverføreDagerService(
-                    omsorgpengesøknadMottakGateway = omsorgpengesoknadMottakGateway,
+                    omsorgsdageroverforingsøknadMottakGateway = omsorgsdageroverforingsøknadMottakGateway,
                     søkerService = søkerService
                 )
             )
@@ -182,7 +182,7 @@ fun Application.omsorgsdageroverforingsoknadapi() {
 
         val healthService = HealthService(
             healthChecks = setOf(
-                omsorgpengesoknadMottakGateway,
+                omsorgsdageroverforingsøknadMottakGateway,
                 HttpRequestHealthCheck(mapOf(
                     configuration.getJwksUrl() to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK, includeExpectedStatusEntity = false),
                     Url.buildURL(baseUrl = configuration.getK9DokumentUrl(), pathParts = listOf("health")) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK),
