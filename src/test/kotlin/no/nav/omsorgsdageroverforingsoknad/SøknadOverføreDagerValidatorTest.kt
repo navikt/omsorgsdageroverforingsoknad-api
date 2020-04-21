@@ -26,6 +26,7 @@ internal class SøknadOverføreDagerValideringsTest {
             språk = "nb",
             antallDager = 5,
             fnrMottaker = gyldigFodselsnummerA,
+            navnMottaker = "Navn Navnesen",
             medlemskap = Medlemskap(
                 harBoddIUtlandetSiste12Mnd = false,
                 skalBoIUtlandetNeste12Mnd = true,
@@ -53,6 +54,7 @@ internal class SøknadOverføreDagerValideringsTest {
             språk = "nb",
             antallDager = 5,
             fnrMottaker = dNummerA,
+            navnMottaker = "Navn Navnesen",
             medlemskap = Medlemskap(
                 harBoddIUtlandetSiste12Mnd = false,
                 skalBoIUtlandetNeste12Mnd = true,
@@ -82,6 +84,7 @@ internal class SøknadOverføreDagerValideringsTest {
             språk = "nb",
             antallDager = 5,
             fnrMottaker = gyldigFodselsnummerA,
+            navnMottaker = "Navn Navnesen",
             medlemskap = Medlemskap(
                 harBoddIUtlandetSiste12Mnd = false,
                 skalBoIUtlandetNeste12Mnd = true,
@@ -109,6 +112,7 @@ internal class SøknadOverføreDagerValideringsTest {
             språk = "nb",
             antallDager = 5,
             fnrMottaker = gyldigFodselsnummerA,
+            navnMottaker = "Navn Navnesen",
             medlemskap = Medlemskap(
                 harBoddIUtlandetSiste12Mnd = false,
                 skalBoIUtlandetNeste12Mnd = true,
@@ -136,6 +140,7 @@ internal class SøknadOverføreDagerValideringsTest {
             språk = "nb",
             antallDager = 5,
             fnrMottaker = gyldigFodselsnummerA,
+            navnMottaker = "Navn Navnesen",
             medlemskap = Medlemskap(
                 harBoddIUtlandetSiste12Mnd = false,
                 skalBoIUtlandetNeste12Mnd = true,
@@ -161,6 +166,7 @@ internal class SøknadOverføreDagerValideringsTest {
             språk = "nb",
             antallDager = 5,
             fnrMottaker = "111111111",
+            navnMottaker = "Navn Navnesen",
             medlemskap = Medlemskap(
                 harBoddIUtlandetSiste12Mnd = false,
                 skalBoIUtlandetNeste12Mnd = true,
@@ -188,6 +194,40 @@ internal class SøknadOverføreDagerValideringsTest {
             språk = "nb",
             antallDager = 5,
             fnrMottaker = gyldigFodselsnummerA,
+            navnMottaker = "Navn Navnesen",
+            medlemskap = Medlemskap(
+                harBoddIUtlandetSiste12Mnd = false,
+                skalBoIUtlandetNeste12Mnd = true,
+                utenlandsoppholdNeste12Mnd = listOf(
+                    Utenlandsopphold(
+                        fraOgMed = LocalDate.now().minusDays(5),
+                        tilOgMed = LocalDate.now(),
+                        landkode = "NO",
+                        landnavn = "Norge"
+                    )
+                )
+            ),
+            harForståttRettigheterOgPlikter = true,
+            harBekreftetOpplysninger = true,
+            arbeidssituasjon = listOf(
+                Arbeidssituasjon.ARBEIDSTAKER
+            ),
+            fosterbarn = listOf(
+                Fosterbarn(
+                    fødselsnummer = "111"
+                )
+            )
+        )
+        søknadOverføreDager.valider()
+    }
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom navn til mottaker er bare space`(){
+        val søknadOverføreDager = SøknadOverføreDager(
+            språk = "nb",
+            antallDager = 5,
+            fnrMottaker = gyldigFodselsnummerA,
+            navnMottaker = " ",
             medlemskap = Medlemskap(
                 harBoddIUtlandetSiste12Mnd = false,
                 skalBoIUtlandetNeste12Mnd = true,

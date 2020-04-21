@@ -20,6 +20,7 @@ class SøknadOverføreDagerUtils {
             språk = "nb",
             antallDager = 5,
             fnrMottaker = "26104500284",
+            navnMottaker = "Navn Navnesen",
             medlemskap = Medlemskap(
                 harBoddIUtlandetSiste12Mnd = false,
                 skalBoIUtlandetNeste12Mnd = true,
@@ -62,6 +63,7 @@ class SøknadOverføreDagerUtils {
                   "harBekreftetOpplysninger": true,
                   "antallDager": 5,
                   "fnrMottaker": "$fnrMottaker",
+                  "navnMottaker": "Navn Navnesen",
                   "fosterbarn": [
                     {
                       "fornavn": "fornavnsen",
@@ -77,6 +79,7 @@ class SøknadOverføreDagerUtils {
             arbeidssituasjon: List<Arbeidssituasjon> = listOf(Arbeidssituasjon.SELVSTENDIGNÆRINGSDRIVENDE),
             landkode: String = "DK",
             fnrMottaker: String = "26104500284",
+            navnMottaker: String = "Navn navnesen",
             fnrFosterbarn: String = "30116404369"
         ): String {
             //language=JSON
@@ -111,6 +114,7 @@ class SøknadOverføreDagerUtils {
                   "harBekreftetOpplysninger": true,
                   "antallDager": 5,
                   "fnrMottaker": "$fnrMottaker",
+                  "navnMottaker": "$navnMottaker",
                   "fosterbarn": [
                     {
                       "fornavn": "fornavnsen",

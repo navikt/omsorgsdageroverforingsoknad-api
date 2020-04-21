@@ -28,13 +28,24 @@ internal fun SøknadOverføreDager.valider() {
         )
     }
 
-if (antallDager !in MIN_ANTALL_DAGER_MAN_KAN_OVERFØRE..MAX_ANTALL_DAGER_MAN_KAN_OVERFØRE) {
+    if (antallDager !in MIN_ANTALL_DAGER_MAN_KAN_OVERFØRE..MAX_ANTALL_DAGER_MAN_KAN_OVERFØRE) {
         violations.add(
             Violation(
                 parameterName = "antallDager",
                 parameterType = ParameterType.ENTITY,
                 reason = "Tillatt antall dager man kan overføre må ligge mellom $MIN_ANTALL_DAGER_MAN_KAN_OVERFØRE og $MAX_ANTALL_DAGER_MAN_KAN_OVERFØRE dager.",
                 invalidValue = antallDager
+            )
+        )
+    }
+
+    if(navnMottaker.isNullOrBlank()){
+        violations.add(
+            Violation(
+                parameterName = "navnMottaker",
+                parameterType = ParameterType.ENTITY,
+                reason = "Navn på mottaker må være satt, kan ikke være tomt eller blankt",
+                invalidValue = navnMottaker
             )
         )
     }

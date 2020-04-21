@@ -410,6 +410,36 @@ class ApplicationTest {
     }
 
     @Test
+    fun `Sende full søknad for overføring av dager hvor navn på mottaker ikke er satt`(){
+        val cookie = getAuthCookie(gyldigFodselsnummerA)
+
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = "/soknad/overfore-omsorgsdager",
+            expectedResponse = """
+                    {
+                      "type": "/problem-details/invalid-request-parameters",
+                      "title": "invalid-request-parameters",
+                      "status": 400,
+                      "detail": "Requesten inneholder ugyldige paramtere.",
+                      "instance": "about:blank",
+                      "invalid_parameters": [
+                        {
+                          "type": "entity",
+                          "name": "navnMottaker",
+                          "reason": "Navn på mottaker må være satt, kan ikke være tomt eller blankt",
+                          "invalid_value": " "
+                        }
+                      ]
+                    }
+            """.trimIndent(),
+            expectedCode = HttpStatusCode.BadRequest,
+            cookie = cookie,
+            requestEntity = SøknadOverføreDagerUtils.fullBodyMedMedlemskap(navnMottaker = " ")
+        )
+    }
+
+    @Test
     fun `Sende full søknad for overføring av dager hvor dager overført er høyere tillatt verdi`(){
         val cookie = getAuthCookie(gyldigFodselsnummerA)
 
