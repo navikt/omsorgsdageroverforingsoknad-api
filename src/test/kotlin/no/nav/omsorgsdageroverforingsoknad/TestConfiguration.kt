@@ -7,7 +7,7 @@ import no.nav.helse.dusseldorf.testsupport.wiremock.getAzureV2WellKnownUrl
 import no.nav.helse.dusseldorf.testsupport.wiremock.getLoginServiceV1WellKnownUrl
 import no.nav.omsorgsdageroverforingsoknad.wiremock.getK9DokumentUrl
 import no.nav.omsorgsdageroverforingsoknad.wiremock.getK9OppslagUrl
-import no.nav.omsorgsdageroverforingsoknad.wiremock.getOmsorgpengesoknadMottakUrl
+import no.nav.omsorgsdageroverforingsoknad.wiremock.getOmsorgsdageroverforingsoknadMottakUrl
 import org.json.JSONObject
 
 object TestConfiguration {
@@ -16,7 +16,7 @@ object TestConfiguration {
         wireMockServer: WireMockServer? = null,
         port : Int = 8080,
         k9OppslagUrl: String? = wireMockServer?.getK9OppslagUrl(),
-        omsorgpengesoknadMottakUrl : String? = wireMockServer?.getOmsorgpengesoknadMottakUrl(),
+        omsorgsdageroverforingsoknadMottakUrl : String? = wireMockServer?.getOmsorgsdageroverforingsoknadMottakUrl(),
         k9DokumentUrl : String? = wireMockServer?.getK9DokumentUrl(),
         corsAdresses : String = "http://localhost:8080"
     ) : Map<String, String> {
@@ -29,7 +29,7 @@ object TestConfiguration {
             Pair("nav.authorization.cookie_name", "localhost-idtoken"),
             Pair("nav.authorization.jwks_uri","${loginServiceWellKnownJson?.getString("jwks_uri")}"),
             Pair("nav.gateways.k9_oppslag_url","$k9OppslagUrl"),
-            Pair("nav.gateways.omsorgsdager_overforing_soknad_mottak_base_url", "$omsorgpengesoknadMottakUrl"),
+            Pair("nav.gateways.omsorgsdager_overforing_soknad_mottak_base_url", "$omsorgsdageroverforingsoknadMottakUrl"),
             Pair("nav.gateways.k9_dokument_url", "$k9DokumentUrl"),
             Pair("nav.cors.addresses", corsAdresses),
             Pair("nav.authorization.api_gateway.api_key", "verysecret")

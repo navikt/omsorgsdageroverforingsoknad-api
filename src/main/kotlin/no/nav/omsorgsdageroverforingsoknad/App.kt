@@ -127,7 +127,7 @@ fun Application.omsorgsdageroverforingsoknadapi() {
 
         val omsorgsdageroverforingsøknadMottakGateway =
             OmsorgsdageroverforingsøknadMottakGateway(
-                baseUrl = configuration.getOmsorgpengesoknadMottakBaseUrl(),
+                baseUrl = configuration.getOmsorgsdageroverforingsoknadMottakBaseUrl(),
                 accessTokenClient = accessTokenClientResolver.accessTokenClient(),
                 sendeSoknadTilProsesseringScopes = configuration.getSendSoknadTilProsesseringScopes(),
                 apiGatewayApiKey = apiGatewayApiKey
@@ -186,7 +186,7 @@ fun Application.omsorgsdageroverforingsoknadapi() {
                 HttpRequestHealthCheck(mapOf(
                     configuration.getJwksUrl() to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK, includeExpectedStatusEntity = false),
                     Url.buildURL(baseUrl = configuration.getK9DokumentUrl(), pathParts = listOf("health")) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK),
-                    Url.buildURL(baseUrl = configuration.getOmsorgpengesoknadMottakBaseUrl(), pathParts = listOf("health")) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK, httpHeaders = mapOf(apiGatewayApiKey.headerKey to apiGatewayApiKey.value))
+                    Url.buildURL(baseUrl = configuration.getOmsorgsdageroverforingsoknadMottakBaseUrl(), pathParts = listOf("health")) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK, httpHeaders = mapOf(apiGatewayApiKey.headerKey to apiGatewayApiKey.value))
                 ))
             )
         )

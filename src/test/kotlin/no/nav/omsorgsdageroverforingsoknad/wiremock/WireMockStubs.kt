@@ -8,7 +8,7 @@ import io.ktor.http.HttpHeaders
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 
 internal const val k9OppslagPath = "/helse-reverse-proxy/k9-selvbetjening-oppslag-mock"
-private const val omsorgpengesoknadMottakPath = "/helse-reverse-proxy/omsorgsdagveroverforingsoknad-mottak-mock"
+private const val omsorgsdageroverforingsoknadMottakPath = "/helse-reverse-proxy/omsorgsdagveroverforingsoknad-mottak-mock"
 private const val k9DokumentPath = "/k9-dokument-mock"
 
 internal fun WireMockBuilder.omsorgsdageroverforingsoknadApiConfig() = wireMockConfiguration {
@@ -85,12 +85,12 @@ private fun WireMockServer.stubHealthEndpointThroughZones(
 }
 
 internal fun WireMockServer.stubK9DokumentHealth() = stubHealthEndpoint("$k9DokumentPath/health")
-internal fun WireMockServer.stubOmsorgsoknadMottakHealth() = stubHealthEndpointThroughZones("$omsorgpengesoknadMottakPath/health")
+internal fun WireMockServer.stubOmsorgsoknadMottakHealth() = stubHealthEndpointThroughZones("$omsorgsdageroverforingsoknadMottakPath/health")
 internal fun WireMockServer.stubOppslagHealth() = stubHealthEndpointThroughZones("$k9OppslagPath/health")
 
 internal fun WireMockServer.stubLeggSoknadTilProsessering(path: String) : WireMockServer{
     WireMock.stubFor(
-        WireMock.post(WireMock.urlMatching(".*$omsorgpengesoknadMottakPath/$path"))
+        WireMock.post(WireMock.urlMatching(".*$omsorgsdageroverforingsoknadMottakPath/$path"))
             .withHeader("x-nav-apiKey", AnythingPattern())
             .willReturn(
                 WireMock.aResponse()
@@ -112,5 +112,5 @@ internal fun WireMockServer.stubK9Dokument() : WireMockServer{
 }
 
 internal fun WireMockServer.getK9OppslagUrl() = baseUrl() + k9OppslagPath
-internal fun WireMockServer.getOmsorgpengesoknadMottakUrl() = baseUrl() + omsorgpengesoknadMottakPath
+internal fun WireMockServer.getOmsorgsdageroverforingsoknadMottakUrl() = baseUrl() + omsorgsdageroverforingsoknadMottakPath
 internal fun WireMockServer.getK9DokumentUrl() = baseUrl() + k9DokumentPath

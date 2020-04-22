@@ -47,10 +47,10 @@ class OmsorgsdageroverforingsøknadMottakGateway(
     override suspend fun check(): Result {
         return try {
             accessTokenClient.getAccessToken(sendeSoknadTilProsesseringScopes)
-            Healthy("OmsorgpengesoknadMottakGateway", "Henting av access token for å legge søknad til prosessering OK.")
+            Healthy("OmsorgsdageroverforingsoknadMottakGateway", "Henting av access token for å legge søknad til prosessering OK.")
         } catch (cause: Throwable) {
             logger.error("Feil ved henting av access token for å legge søknad til prosessering", cause)
-            UnHealthy("OmsorgpengesoknadMottakGateway", "Henting av access token for å legge søknad til prosessering.")
+            UnHealthy("OmsorgsdageroverforingsoknadMottakGateway", "Henting av access token for å legge søknad til prosessering.")
         }
     }
 
