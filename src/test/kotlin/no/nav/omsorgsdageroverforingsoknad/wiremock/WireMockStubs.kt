@@ -8,7 +8,7 @@ import io.ktor.http.HttpHeaders
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 
 internal const val k9OppslagPath = "/helse-reverse-proxy/k9-selvbetjening-oppslag-mock"
-private const val omsorgpengesoknadMottakPath = "/helse-reverse-proxy/omsorgpengesoknad-mottak-mock"
+private const val omsorgpengesoknadMottakPath = "/helse-reverse-proxy/omsorgsdagveroverforingsoknad-mottak-mock"
 private const val k9DokumentPath = "/k9-dokument-mock"
 
 internal fun WireMockBuilder.omsorgsdageroverforingsoknadApiConfig() = wireMockConfiguration {

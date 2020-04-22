@@ -29,7 +29,7 @@ object TestConfiguration {
             Pair("nav.authorization.cookie_name", "localhost-idtoken"),
             Pair("nav.authorization.jwks_uri","${loginServiceWellKnownJson?.getString("jwks_uri")}"),
             Pair("nav.gateways.k9_oppslag_url","$k9OppslagUrl"),
-            Pair("nav.gateways.omsorgpengesoknad_mottak_base_url", "$omsorgpengesoknadMottakUrl"),
+            Pair("nav.gateways.omsorgsdager_overforing_soknad_mottak_base_url", "$omsorgpengesoknadMottakUrl"),
             Pair("nav.gateways.k9_dokument_url", "$k9DokumentUrl"),
             Pair("nav.cors.addresses", corsAdresses),
             Pair("nav.authorization.api_gateway.api_key", "verysecret")
@@ -42,7 +42,7 @@ object TestConfiguration {
             map["nav.auth.clients.0.private_key_jwk"] = ClientCredentials.ClientC.privateKeyJwk
             map["nav.auth.clients.0.certificate_hex_thumbprint"] = "The keyId of Azure JWK"
             map["nav.auth.clients.0.discovery_endpoint"] = wireMockServer.getAzureV2WellKnownUrl()
-            map["nav.auth.scopes.sende-soknad-til-prosessering"] = "omsorgspengesoknad-mottak/.default"
+            map["nav.auth.scopes.sende-soknad-til-prosessering"] = "omsorgsdageroverforingsoknad-mottak/.default"
         }
 
         map["nav.redis.host"] = "localhost"
