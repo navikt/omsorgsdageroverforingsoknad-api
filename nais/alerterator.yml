@@ -37,4 +37,4 @@ spec:
     - alert: {{app}} feiler
       expr: health_check_status{app="{{app}}"} > 0
       for: 2m
-      action: "Sjekk loggene for å se hvorfor helsesjekken feiler. `kubectl logs \{{ $labels.kubernetes_pod_name }} -n \{{ $labels.kubernetes_namespace }}`
+      action: "Sjekk loggene for å se hvorfor helsesjekken feiler. `kubectl logs \{{ $labels.kubernetes_pod_name }} -n \{{ $labels.kubernetes_namespace }}`"

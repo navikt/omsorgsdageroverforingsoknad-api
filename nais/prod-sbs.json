@@ -9,6 +9,9 @@
     "https://omsorgsdageroverforingsoknad-api.nav.no",
     "https://omsorgsdageroverforingsoknad-api.nais.oera.no"
   ],
+  "vaultKvPath": "/kv/prod/sbs/omsorgsdageroverforingsoknad-api/default",
+  "azureadKvPath": "/azuread/data/prod/creds/omsorgsdageroverforingsoknad-api",
+  "apigwKvPath": "/apikey/apigw/prod/helse-reverse-proxy/omsorgsdageroverforingsoknad-api",
   "env": {
     "REDIS_HOST": "omsorgsdageroverforingsoknad-api-redis.default.svc.nais.local",
     "CORS_ADDRESSES": "https://www.nav.no",
