@@ -26,5 +26,6 @@
     "SENDE_SOKNAD_TIL_PROSESSERING_SCOPES": "4d15c5b9-e3ad-47e8-bffa-7294a6e2f91e/.default"
   },
   "slack-channel": "sif-alerts-dev",
+  "slack-notify-type": "<!here> | omsorgsdageroverforingsoknad-api | ",
   "app-alert-ingress": "https://omsorgsdageroverforingsoknad-api-q.nav.no"
 }
