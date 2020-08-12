@@ -40,5 +40,5 @@ data class Utenlandsopphold(
 
 enum class Stengingsperiode(){
     @JsonProperty("mars13tilJuni30") MARS_13_TIL_JUNI_30,
-    @JsonProperty("etterAugust10") ETTER_AUGUST_10
+    @JsonProperty("etterAugust9") ETTER_AUGUST_9
 }

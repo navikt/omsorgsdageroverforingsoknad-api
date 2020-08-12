@@ -35,7 +35,7 @@ class SøknadOverføreDagerUtils {
             arbeidssituasjon = listOf(
                 Arbeidssituasjon.ARBEIDSTAKER
             ),
-            stengingsperiode = Stengingsperiode.ETTER_AUGUST_10
+            stengingsperiode = Stengingsperiode.ETTER_AUGUST_9
         )
 
 
