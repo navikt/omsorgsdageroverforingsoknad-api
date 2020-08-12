@@ -13,7 +13,8 @@ data class SøknadOverføreDager(
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
-    val fosterbarn: List<Fosterbarn>? = listOf()
+    val fosterbarn: List<Fosterbarn>? = listOf(),
+    val stengingsperiode: Stengingsperiode? = null //TODO Fjerne optional etter frontend har prodsatt
 )
 
 enum class Arbeidssituasjon() {
@@ -36,3 +37,8 @@ data class Utenlandsopphold(
     val landkode: String,
     val landnavn: String
 )
+
+enum class Stengingsperiode(){
+    @JsonProperty("mars13tilJuni30") MARS_13_TIL_JUNI_30,
+    @JsonProperty("etterAugust10") ETTER_AUGUST_10
+}

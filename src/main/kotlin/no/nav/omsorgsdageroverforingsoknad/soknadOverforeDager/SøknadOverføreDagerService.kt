@@ -42,7 +42,8 @@ class SøknadOverføreDagerService(
             harForståttRettigheterOgPlikter = søknadOverføreDager.harForståttRettigheterOgPlikter,
             harBekreftetOpplysninger = søknadOverføreDager.harBekreftetOpplysninger,
             arbeidssituasjon = søknadOverføreDager.arbeidssituasjon,
-            fosterbarn = søknadOverføreDager.fosterbarn
+            fosterbarn = søknadOverføreDager.fosterbarn,
+            stengingsperiode = søknadOverføreDager.stengingsperiode
         )
 
         omsorgsdageroverforingsøknadMottakGateway.leggTilProsesseringOverføreDager(
