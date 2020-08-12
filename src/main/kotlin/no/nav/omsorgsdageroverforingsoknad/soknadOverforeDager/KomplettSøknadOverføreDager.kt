@@ -14,7 +14,8 @@ data class KomplettSøknadOverføreDager (
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
-    val fosterbarn: List<Fosterbarn>? = listOf()
+    val fosterbarn: List<Fosterbarn>? = listOf(),
+    val stengingsperiode: Stengingsperiode? = null//TODO Fjerne optional etter frontend har prodsatt
 )
 
 

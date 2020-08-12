@@ -28,6 +28,19 @@ internal fun SøknadOverføreDager.valider() {
         )
     }
 
+    //TODO Aktivere validering på stengingsperiode etter at det er prodsatt i frontend og oppdatere tester
+
+  /*  if(stengingsperiode == null){
+        violations.add(
+            Violation(
+                parameterName = "stengingsperiode",
+                parameterType = ParameterType.ENTITY,
+                reason = "Stengingsperiode må være satt",
+                invalidValue = stengingsperiode
+            )
+        )
+    }*/
+
     if (antallDager !in MIN_ANTALL_DAGER_MAN_KAN_OVERFØRE..MAX_ANTALL_DAGER_MAN_KAN_OVERFØRE) {
         violations.add(
             Violation(

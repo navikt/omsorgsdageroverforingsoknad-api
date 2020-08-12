@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
-import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.Arbeidssituasjon
-import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.Medlemskap
-import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.SøknadOverføreDager
-import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.Utenlandsopphold
+import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.*
 import java.time.LocalDate
 
 class SøknadOverføreDagerUtils {
@@ -37,7 +34,8 @@ class SøknadOverføreDagerUtils {
             harBekreftetOpplysninger = true,
             arbeidssituasjon = listOf(
                 Arbeidssituasjon.ARBEIDSTAKER
-            )
+            ),
+            stengingsperiode = Stengingsperiode.ETTER_AUGUST_9
         )
 
 
