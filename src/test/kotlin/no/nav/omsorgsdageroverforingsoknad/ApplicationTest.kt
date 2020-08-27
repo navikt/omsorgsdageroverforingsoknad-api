@@ -14,6 +14,8 @@ import io.ktor.server.testing.setBody
 import io.ktor.util.KtorExperimentalAPI
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.helse.getAuthCookie
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.DELE_DAGER_API_URL
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.DELE_DAGER_MOTTAK_URL
 import no.nav.omsorgsdageroverforingsoknad.redis.RedisMockUtil
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.MAX_ANTALL_DAGER_MAN_KAN_OVERFØRE
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.MIN_ANTALL_DAGER_MAN_KAN_OVERFØRE
@@ -51,9 +53,8 @@ class ApplicationTest {
             .stubK9DokumentHealth()
             .stubOmsorgsoknadMottakHealth()
             .stubOppslagHealth()
-            .stubLeggSoknadTilProsessering("v1/soknad")
             .stubLeggSoknadTilProsessering("v1/soknad/overfore-dager")
-            .stubLeggSoknadTilProsessering("v1/ettersend")
+            .stubLeggSoknadTilProsessering("v1$DELE_DAGER_MOTTAK_URL")
             .stubK9OppslagSoker()
             .stubK9OppslagBarn()
             .stubK9Dokument()
@@ -185,7 +186,7 @@ class ApplicationTest {
 """.trimIndent()
 
     @Test
-    fun `Hente soeker`() {
+    fun `Hente søker`() {
         requestAndAssert(
             httpMethod = HttpMethod.Get,
             path = "/soker",
@@ -210,7 +211,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `Sende ettersending ikke myndig`() {
+    fun `Sende overføre-dager ikke myndig`() {
         val cookie = getAuthCookie(ikkeMyndigFnr)
 
         requestAndAssert(
@@ -498,7 +499,63 @@ class ApplicationTest {
         )
     }
 
-    private fun requestAndAssert(
+    @Test
+    fun `Sende gyldig melding om fordeling av omsorgsdager`(){
+        val cookie = getAuthCookie(gyldigFodselsnummerA)
+
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = DELE_DAGER_API_URL,
+            expectedResponse = null,
+            expectedCode = HttpStatusCode.Accepted,
+            cookie = cookie,
+            requestEntity = MeldingDeleOmsorgsdagerUtils.fullBody()
+        )
+    }
+
+    @Test
+    fun `Sende ugyldig melding om fordeling av omsorgsdager`(){
+        val cookie = getAuthCookie(gyldigFodselsnummerA)
+
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = DELE_DAGER_API_URL,
+            //language=JSON
+            expectedResponse = """
+                    {
+                      "type": "/problem-details/invalid-request-parameters",
+                      "title": "invalid-request-parameters",
+                      "status": 400,
+                      "detail": "Requesten inneholder ugyldige paramtere.",
+                      "instance": "about:blank",
+                      "invalid_parameters": [
+                        {
+                          "type": "entity",
+                          "name": "harBekreftetOpplysninger",
+                          "reason": "Opplysningene må bekreftes for å sende inn søknad.",
+                          "invalid_value": false
+                        },
+                        {
+                          "type": "entity",
+                          "name": "harForståttRettigheterOgPlikter",
+                          "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad.",
+                          "invalid_value": false
+                        }
+                      ]
+                    }
+            """.trimIndent(),
+            expectedCode = HttpStatusCode.BadRequest,
+            cookie = cookie,
+            requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.copy(
+                harForståttRettigheterOgPlikter = false,
+                harBekreftetOpplysninger = false
+            ).somJson()
+        )
+    }
+
+    //TODO: Flere tester for deling av omsorgsdager, når strukturen er utvidet og validering er implementert
+
+   private fun requestAndAssert(
         httpMethod: HttpMethod,
         path: String,
         requestEntity: String? = null,

@@ -10,6 +10,10 @@ import io.ktor.response.respond
 import io.ktor.routing.Route
 import no.nav.omsorgsdageroverforingsoknad.general.auth.IdTokenProvider
 import no.nav.omsorgsdageroverforingsoknad.general.getCallId
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.DELE_DAGER_API_URL
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.MeldingDeleOmsorgsdager
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.MeldingDeleOmsorgsdagerService
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.valider
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -18,6 +22,7 @@ private val logger: Logger = LoggerFactory.getLogger("nav.soknadApis")
 @KtorExperimentalLocationsAPI
 fun Route.søknadApis(
     søknadOverføreDagerService: SøknadOverføreDagerService,
+    meldingDeleOmsorgsdagerService: MeldingDeleOmsorgsdagerService,
     idTokenProvider: IdTokenProvider
 ) {
 
@@ -40,6 +45,27 @@ fun Route.søknadApis(
         )
 
         logger.trace("Søknad registrert.")
+        call.respond(HttpStatusCode.Accepted)
+    }
+
+    @Location(DELE_DAGER_API_URL)
+    class sendMeldingDeleOmsorgsdager
+
+    post { _ : sendMeldingDeleOmsorgsdager ->
+        logger.trace("Mottatt ny melding for deling av omsorgsdager. Mapper melding.")
+        val melding = call.receive<MeldingDeleOmsorgsdager>()
+        logger.trace("Søknad mappet. Validerer")
+
+        melding.valider()
+        logger.trace("Validering OK. Registrerer melding.")
+
+        meldingDeleOmsorgsdagerService.registrer(
+            meldingDeleOmsorgsdager = melding,
+            callId = call.getCallId(),
+            idToken = idTokenProvider.getIdToken(call)
+        )
+
+        logger.trace("Melding registrert.")
         call.respond(HttpStatusCode.Accepted)
     }
 }
