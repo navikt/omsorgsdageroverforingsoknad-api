@@ -500,7 +500,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `Sende gyldig melding om fordeling av omsorgsdager`(){
+    fun `Sende gyldig melding om deling av omsorgsdager`(){
         val cookie = getAuthCookie(gyldigFodselsnummerA)
 
         requestAndAssert(
@@ -514,7 +514,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `Sende ugyldig melding om fordeling av omsorgsdager`(){
+    fun `Sende ugyldig melding om deling av omsorgsdager`(){
         val cookie = getAuthCookie(gyldigFodselsnummerA)
 
         requestAndAssert(

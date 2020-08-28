@@ -33,6 +33,7 @@ class MeldingDeleOmsorgsdagerService(
 
         val komplettMeldingDeleOmsorgsdager = KomplettMeldingDeleOmsorgsdager(
             mottatt = ZonedDateTime.now(ZoneOffset.UTC),
+            søker = søker,
             språk = meldingDeleOmsorgsdager.språk,
             harForståttRettigheterOgPlikter = meldingDeleOmsorgsdager.harForståttRettigheterOgPlikter,
             harBekreftetOpplysninger = meldingDeleOmsorgsdager.harBekreftetOpplysninger
