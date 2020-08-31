@@ -16,15 +16,28 @@ class MeldingDeleOmsorgsdagerUtils {
 
         val meldingDeleOmsorgsdager = MeldingDeleOmsorgsdager(
             språk = "nb",
+            medlemskap = Medlemskap(
+                skalBoIUtlandetNeste12Mnd = false,
+                utenlandsoppholdNeste12Mnd = listOf(),
+                harBoddIUtlandetSiste12Mnd = false,
+                utenlandsoppholdSiste12Mnd = listOf()
+            ),
             harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true
         )
 
 
         fun fullBody(): String {
+            //language=json
             return """
                 {
                   "språk": "nb",
+                  "medlemskap": {
+                    "harBoddIUtlandetSiste12Mnd": false,
+                    "utenlandsoppholdSiste12Mnd": [],
+                    "skalBoIUtlandetNeste12Mnd": false,
+                    "utenlandsoppholdNeste12Mnd": []
+                  },
                   "harForståttRettigheterOgPlikter": true,
                   "harBekreftetOpplysninger": true
                 }
