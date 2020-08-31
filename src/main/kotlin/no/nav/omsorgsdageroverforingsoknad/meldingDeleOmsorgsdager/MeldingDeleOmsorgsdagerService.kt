@@ -19,7 +19,7 @@ class MeldingDeleOmsorgsdagerService(
     }
 
     suspend fun registrer(
-        meldingDeleOmsorgsdager: MeldingDeleOmsorgsdager,
+        melding: MeldingDeleOmsorgsdager,
         idToken: IdToken,
         callId: CallId
     ){
@@ -34,9 +34,10 @@ class MeldingDeleOmsorgsdagerService(
         val komplettMeldingDeleOmsorgsdager = KomplettMeldingDeleOmsorgsdager(
             mottatt = ZonedDateTime.now(ZoneOffset.UTC),
             søker = søker,
-            språk = meldingDeleOmsorgsdager.språk,
-            harForståttRettigheterOgPlikter = meldingDeleOmsorgsdager.harForståttRettigheterOgPlikter,
-            harBekreftetOpplysninger = meldingDeleOmsorgsdager.harBekreftetOpplysninger
+            språk = melding.språk,
+            medlemskap = melding.medlemskap,
+            harForståttRettigheterOgPlikter = melding.harForståttRettigheterOgPlikter,
+            harBekreftetOpplysninger = melding.harBekreftetOpplysninger
         )
 
         meldingDeleOmsorgsdagerMottakGateway.leggTilProsesseringDeleOmsorgsdager(

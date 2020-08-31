@@ -60,7 +60,7 @@ fun Route.søknadApis(
         logger.trace("Validering OK. Registrerer melding.")
 
         meldingDeleOmsorgsdagerService.registrer(
-            meldingDeleOmsorgsdager = melding,
+            melding = melding,
             callId = call.getCallId(),
             idToken = idTokenProvider.getIdToken(call)
         )
