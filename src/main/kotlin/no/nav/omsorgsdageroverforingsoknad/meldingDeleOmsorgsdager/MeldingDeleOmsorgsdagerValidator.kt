@@ -4,12 +4,12 @@ import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Violation
-import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.valider
 
 internal fun MeldingDeleOmsorgsdager.valider() {
     val violations: MutableSet<Violation> = mutableSetOf<Violation>()
 
-    violations.addAll(medlemskap.valider())
+
+    //TODO: Utvide med mer validering.
 
     if (!harBekreftetOpplysninger) {
         violations.add(

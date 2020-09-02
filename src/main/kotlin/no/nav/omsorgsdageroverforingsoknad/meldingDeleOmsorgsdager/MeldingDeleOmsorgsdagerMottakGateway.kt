@@ -39,7 +39,7 @@ class MeldingDeleOmsorgsdagerMottakGateway(
 
     private val komplettUrlDeleDager = Url.buildURL(
     baseUrl = baseUrl,
-    pathParts = listOf("v1", DELE_DAGER_MOTTAK_URL) //TODO: Lage nytt endepunkt i mottakk og oppdatere her
+    pathParts = listOf("v1", DELE_DAGER_MOTTAK_URL)
     ).toString()
 
     private val cachedAccessTokenClient = CachedAccessTokenClient(accessTokenClient)

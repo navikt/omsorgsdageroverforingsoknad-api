@@ -1,10 +1,12 @@
 package no.nav.omsorgsdageroverforingsoknad
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
+import no.nav.omsorgsdageroverforingsoknad.barn.Barn
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.AndreBarn
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.MeldingDeleOmsorgsdager
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.OverføreTilType
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.valider
-import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.Medlemskap
-import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.Utenlandsopphold
+import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.Arbeidssituasjon
 import org.junit.Test
 import java.time.LocalDate
 
@@ -19,20 +21,48 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
     fun `Skal ikke feile på gyldig søknad`(){
         val melding = MeldingDeleOmsorgsdager(
             språk = "nb",
-            medlemskap = Medlemskap(
-                harBoddIUtlandetSiste12Mnd = false,
-                skalBoIUtlandetNeste12Mnd = true,
-                utenlandsoppholdNeste12Mnd = listOf(
-                    Utenlandsopphold(
-                        fraOgMed = LocalDate.now().minusDays(5),
-                        tilOgMed = LocalDate.now(),
-                        landkode = "NO",
-                        landnavn = "Norge"
-                    )
+            harForståttRettigheterOgPlikter = true,
+            harBekreftetOpplysninger = true,
+            andreBarn = listOf(
+                AndreBarn(
+                    fnr = "12345678900",
+                    navn = "Barn Barnesen",
+                    ingenFnr = false
                 )
             ),
-            harForståttRettigheterOgPlikter = true,
-            harBekreftetOpplysninger = true
+            harAleneomsorg = true,
+            harAleneomsorgFor = listOf(
+                Barn(
+                    fødselsdato = LocalDate.parse("2010-01-01"),
+                    aktørId = "12345",
+                    fornavn = "Fornavn",
+                    etternavn = "Etternavn",
+                    mellomnavn = "Mellomnavn"
+                )
+            ),
+            harUtvidetRett = true,
+            harUtvidetRettFor = listOf(
+                Barn(
+                    fødselsdato = LocalDate.parse("2010-01-01"),
+                    aktørId = "12345",
+                    fornavn = "Fornavn",
+                    etternavn = "Etternavn",
+                    mellomnavn = "Mellomnavn"
+                )
+            ),
+            borINorge = true,
+            arbeidINorge = true,
+            arbeidssituasjon = listOf(
+                Arbeidssituasjon.ARBEIDSTAKER
+            ),
+            antallDagerHarBruktEtter1Juli = 10,
+            harDeltDagerMedAndreTidligere = true,
+            antallDagerHarDeltMedAndre = 10,
+            overføreTilType = OverføreTilType.NY_EKTEFELLE,
+            fnrMottaker = "12345678911",
+            navnMottaker = "Navn Mottaker",
+            antallDagerTilOverføre = 5,
+            harBekreftetMottakerOpplysninger = true
         )
 
         melding.valider()
@@ -42,20 +72,48 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
     fun `Skal feile dersom harBekreftetOpplysninger er false`(){
         val melding = MeldingDeleOmsorgsdager(
             språk = "nb",
-            medlemskap = Medlemskap(
-                harBoddIUtlandetSiste12Mnd = false,
-                skalBoIUtlandetNeste12Mnd = true,
-                utenlandsoppholdNeste12Mnd = listOf(
-                    Utenlandsopphold(
-                        fraOgMed = LocalDate.now().minusDays(5),
-                        tilOgMed = LocalDate.now(),
-                        landkode = "NO",
-                        landnavn = "Norge"
-                    )
+            harForståttRettigheterOgPlikter = true,
+            harBekreftetOpplysninger = false,
+            andreBarn = listOf(
+                AndreBarn(
+                    fnr = "12345678900",
+                    navn = "Barn Barnesen",
+                    ingenFnr = false
                 )
             ),
-            harForståttRettigheterOgPlikter = true,
-            harBekreftetOpplysninger = false
+            harAleneomsorg = true,
+            harAleneomsorgFor = listOf(
+                Barn(
+                    fødselsdato = LocalDate.parse("2010-01-01"),
+                    aktørId = "12345",
+                    fornavn = "Fornavn",
+                    etternavn = "Etternavn",
+                    mellomnavn = "Mellomnavn"
+                )
+            ),
+            harUtvidetRett = true,
+            harUtvidetRettFor = listOf(
+                Barn(
+                    fødselsdato = LocalDate.parse("2010-01-01"),
+                    aktørId = "12345",
+                    fornavn = "Fornavn",
+                    etternavn = "Etternavn",
+                    mellomnavn = "Mellomnavn"
+                )
+            ),
+            borINorge = true,
+            arbeidINorge = true,
+            arbeidssituasjon = listOf(
+                Arbeidssituasjon.ARBEIDSTAKER
+            ),
+            antallDagerHarBruktEtter1Juli = 10,
+            harDeltDagerMedAndreTidligere = true,
+            antallDagerHarDeltMedAndre = 10,
+            overføreTilType = OverføreTilType.NY_EKTEFELLE,
+            fnrMottaker = "12345678911",
+            navnMottaker = "Navn Mottaker",
+            antallDagerTilOverføre = 5,
+            harBekreftetMottakerOpplysninger = true
         )
 
         melding.valider()

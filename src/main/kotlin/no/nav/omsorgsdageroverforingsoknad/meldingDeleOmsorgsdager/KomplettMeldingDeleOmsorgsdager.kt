@@ -1,14 +1,30 @@
 package no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager
 
+import no.nav.omsorgsdageroverforingsoknad.barn.Barn
 import no.nav.omsorgsdageroverforingsoknad.soker.Søker
-import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.Medlemskap
+import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.Arbeidssituasjon
 import java.time.ZonedDateTime
 
 data class KomplettMeldingDeleOmsorgsdager(
     val mottatt: ZonedDateTime,
     val søker: Søker,
     val språk: String,
-    val medlemskap: Medlemskap,
     val harForståttRettigheterOgPlikter: Boolean,
-    val harBekreftetOpplysninger: Boolean
+    val harBekreftetOpplysninger: Boolean,
+    val andreBarn: List<AndreBarn>,
+    val harAleneomsorg: Boolean,
+    val harAleneomsorgFor: List<Barn>,
+    val harUtvidetRett: Boolean,
+    val harUtvidetRettFor: List<Barn>,
+    val borINorge: Boolean,
+    val arbeidINorge: Boolean,
+    val arbeidssituasjon: List<Arbeidssituasjon>,
+    val antallDagerHarBruktEtter1Juli: Int,
+    val harDeltDagerMedAndreTidligere: Boolean,
+    val antallDagerHarDeltMedAndre: Int,
+    val overføreTilType: OverføreTilType,
+    val fnrMottaker: String,
+    val navnMottaker: String,
+    val antallDagerTilOverføre: Int,
+    val harBekreftetMottakerOpplysninger: Boolean
 )
