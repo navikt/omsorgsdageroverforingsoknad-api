@@ -91,4 +91,18 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
         melding.valider()
     }
 
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom andreBarn har ugyldig fnr og ingenFnr er false`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            andreBarn = listOf(
+                AndreBarn(
+                    fnr = "ikke gyldig",
+                    navn = "Barn",
+                    ingenFnr = false
+                )
+            )
+        )
+        melding.valider()
+    }
+
 }

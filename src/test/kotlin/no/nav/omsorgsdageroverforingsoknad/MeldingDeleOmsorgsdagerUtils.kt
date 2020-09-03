@@ -25,7 +25,7 @@ class MeldingDeleOmsorgsdagerUtils {
             harBekreftetOpplysninger = true,
             andreBarn = listOf(
                 AndreBarn(
-                    fnr = "12345678900",
+                    fnr = gyldigfnr,
                     navn = "Barn Barnesen",
                     ingenFnr = false
                 )
