@@ -15,7 +15,7 @@ API for søknad om overføring av omsorgsdager(koronadager) og API for melding o
 Denne tjenesten understøtter søknadsprosessen, samt eksponerer endepunkt for innsending av søknad om overføring av omsorgsdager(koronadager).
 Denne tjenesten understøtter søknadsprosessen, samt eksponerer endepunkt for innsending av melding om deling av omsorgsdager.
 
-###Sende inn melding om deling av omsorgsdager
+### Sende inn melding om deling av omsorgsdager
 POST @ /melding/dele-dager som gir 202 Accepted
 
 Validering på felter:
