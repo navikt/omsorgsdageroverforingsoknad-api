@@ -75,7 +75,7 @@ class MeldingDeleOmsorgsdagerUtils {
                   "harBekreftetOpplysninger": true,
                   "andreBarn": [
                     {
-                      "fnr": "12345678900",
+                      "fnr": "07068920285",
                       "ingenFnr": false,
                       "navn": "Barn Barnesen"
                     }
