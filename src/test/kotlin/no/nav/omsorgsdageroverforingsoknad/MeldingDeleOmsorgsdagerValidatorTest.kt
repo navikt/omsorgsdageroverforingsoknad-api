@@ -1,6 +1,7 @@
 package no.nav.omsorgsdageroverforingsoknad
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
+import no.nav.omsorgsdageroverforingsoknad.MeldingDeleOmsorgsdagerUtils.Companion.meldingDeleOmsorgsdager
 import no.nav.omsorgsdageroverforingsoknad.barn.Barn
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.AndreBarn
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.MeldingDeleOmsorgsdager
@@ -19,103 +20,74 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
 
     @Test
     fun `Skal ikke feile på gyldig søknad`(){
-        val melding = MeldingDeleOmsorgsdager(
-            språk = "nb",
-            harForståttRettigheterOgPlikter = true,
-            harBekreftetOpplysninger = true,
-            andreBarn = listOf(
-                AndreBarn(
-                    fnr = "12345678900",
-                    navn = "Barn Barnesen",
-                    ingenFnr = false
-                )
-            ),
-            harAleneomsorg = true,
-            harAleneomsorgFor = listOf(
-                Barn(
-                    fødselsdato = LocalDate.parse("2010-01-01"),
-                    aktørId = "12345",
-                    fornavn = "Fornavn",
-                    etternavn = "Etternavn",
-                    mellomnavn = "Mellomnavn"
-                )
-            ),
-            harUtvidetRett = true,
-            harUtvidetRettFor = listOf(
-                Barn(
-                    fødselsdato = LocalDate.parse("2010-01-01"),
-                    aktørId = "12345",
-                    fornavn = "Fornavn",
-                    etternavn = "Etternavn",
-                    mellomnavn = "Mellomnavn"
-                )
-            ),
-            borINorge = true,
-            arbeidINorge = true,
-            arbeidssituasjon = listOf(
-                Arbeidssituasjon.ARBEIDSTAKER
-            ),
-            antallDagerHarBruktEtter1Juli = 10,
-            harDeltDagerMedAndreTidligere = true,
-            antallDagerHarDeltMedAndre = 10,
-            overføreTilType = OverføreTilType.NY_EKTEFELLE,
-            fnrMottaker = "12345678911",
-            navnMottaker = "Navn Mottaker",
-            antallDagerTilOverføre = 5,
-            harBekreftetMottakerOpplysninger = true
-        )
-
+        val melding = meldingDeleOmsorgsdager
         melding.valider()
     }
 
     @Test(expected = Throwblem::class)
     fun `Skal feile dersom harBekreftetOpplysninger er false`(){
-        val melding = MeldingDeleOmsorgsdager(
-            språk = "nb",
-            harForståttRettigheterOgPlikter = true,
-            harBekreftetOpplysninger = false,
-            andreBarn = listOf(
-                AndreBarn(
-                    fnr = "12345678900",
-                    navn = "Barn Barnesen",
-                    ingenFnr = false
-                )
-            ),
-            harAleneomsorg = true,
-            harAleneomsorgFor = listOf(
-                Barn(
-                    fødselsdato = LocalDate.parse("2010-01-01"),
-                    aktørId = "12345",
-                    fornavn = "Fornavn",
-                    etternavn = "Etternavn",
-                    mellomnavn = "Mellomnavn"
-                )
-            ),
-            harUtvidetRett = true,
-            harUtvidetRettFor = listOf(
-                Barn(
-                    fødselsdato = LocalDate.parse("2010-01-01"),
-                    aktørId = "12345",
-                    fornavn = "Fornavn",
-                    etternavn = "Etternavn",
-                    mellomnavn = "Mellomnavn"
-                )
-            ),
-            borINorge = true,
-            arbeidINorge = true,
-            arbeidssituasjon = listOf(
-                Arbeidssituasjon.ARBEIDSTAKER
-            ),
-            antallDagerHarBruktEtter1Juli = 10,
-            harDeltDagerMedAndreTidligere = true,
-            antallDagerHarDeltMedAndre = 10,
-            overføreTilType = OverføreTilType.NY_EKTEFELLE,
-            fnrMottaker = "12345678911",
-            navnMottaker = "Navn Mottaker",
-            antallDagerTilOverføre = 5,
-            harBekreftetMottakerOpplysninger = true
+        val melding = meldingDeleOmsorgsdager.copy(
+            harBekreftetOpplysninger = false
         )
+        melding.valider()
+    }
 
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom harForståttRettigheterOgPlikter er false`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            harForståttRettigheterOgPlikter = false
+        )
+        melding.valider()
+    }
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom harBekreftetMottakerOpplysninger er false`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            harBekreftetMottakerOpplysninger = false
+        )
+        melding.valider()
+    }
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom harAleneomsorg er true mens harAleneomsorgFor er tom`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            harAleneomsorg = true,
+            harAleneomsorgFor = listOf()
+        )
+        melding.valider()
+    }
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom harUtvidetRett er true mens harUtvidetRettFor er tom`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            harUtvidetRett = true,
+            harUtvidetRettFor= listOf()
+        )
+        melding.valider()
+    }
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom fnrMottaker ikke er gyldig`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            fnrMottaker = "ugyldig"
+        )
+        melding.valider()
+    }
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom antallDagerHarDeltMedAndre er ugyldig og harDeltDagerMedAndre er true`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            harDeltDagerMedAndreTidligere = true,
+            antallDagerHarDeltMedAndre = 0
+        )
+        melding.valider()
+    }
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom antallDagerTilOverføre er 0`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            antallDagerTilOverføre = 0
+        )
         melding.valider()
     }
 

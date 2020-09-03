@@ -553,6 +553,27 @@ class ApplicationTest {
         )
     }
 
+    @Test
+    fun `Sende medling om deling av omsorgsdager hvor søker ikke myndig`() {
+        val cookie = getAuthCookie(ikkeMyndigFnr)
+
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = DELE_DAGER_API_URL,
+            expectedResponse = """
+                {
+                    "type": "/problem-details/unauthorized",
+                    "title": "unauthorized",
+                    "status": 403,
+                    "detail": "Søkeren er ikke myndig og kan ikke sende inn søknaden.",
+                    "instance": "about:blank"
+                }
+            """.trimIndent(),
+            expectedCode = HttpStatusCode.Forbidden,
+            cookie = cookie,
+            requestEntity = MeldingDeleOmsorgsdagerUtils.fullBody()
+        )
+    }
     //TODO: Flere tester for deling av omsorgsdager, når strukturen er utvidet og validering er implementert
 
    private fun requestAndAssert(

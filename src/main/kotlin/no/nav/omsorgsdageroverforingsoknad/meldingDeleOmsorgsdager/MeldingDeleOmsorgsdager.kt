@@ -3,7 +3,6 @@ package no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.omsorgsdageroverforingsoknad.barn.Barn
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.Arbeidssituasjon
-import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.Medlemskap
 
 data class MeldingDeleOmsorgsdager(
     val språk: String,
@@ -33,8 +32,6 @@ data class AndreBarn (
     val ingenFnr: Boolean,
     val navn: String
 )
-
-
 
 enum class OverføreTilType() {
     @JsonProperty("nyEktefelle") NY_EKTEFELLE,

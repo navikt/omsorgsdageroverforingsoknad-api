@@ -17,6 +17,8 @@ class MeldingDeleOmsorgsdagerUtils {
             .setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
             .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
 
+        val gyldigfnr = "07068920285"
+
         val meldingDeleOmsorgsdager = MeldingDeleOmsorgsdager(
             språk = "nb",
             harForståttRettigheterOgPlikter = true,
@@ -57,7 +59,7 @@ class MeldingDeleOmsorgsdagerUtils {
             harDeltDagerMedAndreTidligere = true,
             antallDagerHarDeltMedAndre = 10,
             overføreTilType = OverføreTilType.NY_EKTEFELLE,
-            fnrMottaker = "12345678911",
+            fnrMottaker = gyldigfnr,
             navnMottaker = "Navn Mottaker",
             antallDagerTilOverføre = 5,
             harBekreftetMottakerOpplysninger = true
@@ -107,7 +109,7 @@ class MeldingDeleOmsorgsdagerUtils {
                   "harDeltDagerMedAndreTidligere": true,
                   "antallDagerHarDeltMedAndre": 10,
                   "overføreTilType": "nyEktefelle",
-                  "fnrMottaker": "12345678911",
+                  "fnrMottaker": "07068920285",
                   "navnMottaker": "Navn Mottaker",
                   "antallDagerTilOverføre": 5,
                   "harBekreftetMottakerOpplysninger": true
