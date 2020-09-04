@@ -24,6 +24,14 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
         melding.valider()
     }
 
+    @Test
+    fun `Skal ikke feile på gyldig søknad med dnummer`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            fnrMottaker = dNummerA
+        )
+        melding.valider()
+    }
+
     @Test(expected = Throwblem::class)
     fun `Skal feile dersom harBekreftetOpplysninger er false`(){
         val melding = meldingDeleOmsorgsdager.copy(
