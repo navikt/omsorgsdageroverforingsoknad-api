@@ -574,7 +574,65 @@ class ApplicationTest {
             requestEntity = MeldingDeleOmsorgsdagerUtils.fullBody()
         )
     }
-    //TODO: Flere tester for deling av omsorgsdager, når strukturen er utvidet og validering er implementert
+
+    @Test
+    fun `Sende medling om deling av omsorgsdager med flere feil`() {
+        val cookie = getAuthCookie(gyldigFodselsnummerA)
+
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = DELE_DAGER_API_URL,
+            expectedResponse = """
+                {
+                  "type": "/problem-details/invalid-request-parameters",
+                  "title": "invalid-request-parameters",
+                  "status": 400,
+                  "detail": "Requesten inneholder ugyldige paramtere.",
+                  "instance": "about:blank",
+                  "invalid_parameters": [
+                    {
+                      "type": "entity",
+                      "name": "harAleneomsorgFor && harAleneomsorg",
+                      "reason": "Dersom harAleneomsorg er true kan ikke harAleneomsorgFor være tom",
+                      "invalid_value": [
+                        
+                      ]
+                    },
+                    {
+                      "type": "entity",
+                      "name": "harUtvidetRettFor && harUtvidetRett",
+                      "reason": "Dersom harUtvidetRett er true kan ikke harUtvidetRettFor være tom",
+                      "invalid_value": [
+                        
+                      ]
+                    },
+                    {
+                      "type": "entity",
+                      "name": "fnrMottaker",
+                      "reason": "fnrMottaker er ikke gyldig norsk identifikator",
+                      "invalid_value": "ikke gyldig"
+                    },
+                    {
+                      "type": "entity",
+                      "name": "antallDagerTilOverføre",
+                      "reason": "antallDagerTilOverføre kan ikke være 0 eller mindre",
+                      "invalid_value": -1
+                    }
+                  ]
+                }
+            """.trimIndent(),
+            expectedCode = HttpStatusCode.BadRequest,
+            cookie = cookie,
+            requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.copy(
+                harAleneomsorg = true,
+                harAleneomsorgFor = listOf(),
+                harUtvidetRett = true,
+                harUtvidetRettFor = listOf(),
+                antallDagerTilOverføre = -1,
+                fnrMottaker = "ikke gyldig"
+            ).somJson()
+        )
+    }
 
    private fun requestAndAssert(
         httpMethod: HttpMethod,
