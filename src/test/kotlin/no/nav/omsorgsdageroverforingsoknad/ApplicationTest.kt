@@ -16,6 +16,8 @@ import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.helse.getAuthCookie
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.DELE_DAGER_API_URL
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.DELE_DAGER_MOTTAK_URL
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.MAX_ANTALL_DAGER_MAN_KAN_DELE
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.MIN_ANTALL_DAGER_MAN_KAN_DELE
 import no.nav.omsorgsdageroverforingsoknad.redis.RedisMockUtil
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.MAX_ANTALL_DAGER_MAN_KAN_OVERFØRE
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.MIN_ANTALL_DAGER_MAN_KAN_OVERFØRE
@@ -615,7 +617,7 @@ class ApplicationTest {
                     {
                       "type": "entity",
                       "name": "antallDagerTilOverføre",
-                      "reason": "antallDagerTilOverføre kan ikke være 0 eller mindre",
+                      "reason": "antallDagerTilOverføre må være mellom $MIN_ANTALL_DAGER_MAN_KAN_DELE og ${MAX_ANTALL_DAGER_MAN_KAN_DELE}",
                       "invalid_value": -1
                     }
                   ]

@@ -6,6 +6,9 @@ import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.erGyldigNorskIdentifikator
 
+val MAX_ANTALL_DAGER_MAN_KAN_DELE = 999
+val MIN_ANTALL_DAGER_MAN_KAN_DELE = 1
+
 internal fun MeldingDeleOmsorgsdager.valider() {
     val violations: MutableSet<Violation> = mutableSetOf<Violation>()
 
@@ -90,12 +93,12 @@ internal fun MeldingDeleOmsorgsdager.valider() {
         )
     }
 
-    if(antallDagerTilOverføre <= 0){
+    if(antallDagerTilOverføre !in MIN_ANTALL_DAGER_MAN_KAN_DELE..MAX_ANTALL_DAGER_MAN_KAN_DELE){
         violations.add(
             Violation(
                 parameterName = "antallDagerTilOverføre",
                 parameterType = ParameterType.ENTITY,
-                reason = "antallDagerTilOverføre kan ikke være 0 eller mindre",
+                reason = "antallDagerTilOverføre må være mellom $MIN_ANTALL_DAGER_MAN_KAN_DELE og $MAX_ANTALL_DAGER_MAN_KAN_DELE",
                 invalidValue = antallDagerTilOverføre
             )
         )
