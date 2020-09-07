@@ -198,6 +198,16 @@ class ApplicationTest {
     }
 
     @Test
+    fun `Hente søker for melding av deling av omsorgsdager`() {
+        requestAndAssert(
+            httpMethod = HttpMethod.Get,
+            path = "/sokerMelding",
+            expectedCode = HttpStatusCode.OK,
+            expectedResponse = expectedGetSokerJson(fnr)
+        )
+    }
+
+    @Test
     fun `Hente søker som ikke er myndig`() {
         requestAndAssert(
             httpMethod = HttpMethod.Get,
