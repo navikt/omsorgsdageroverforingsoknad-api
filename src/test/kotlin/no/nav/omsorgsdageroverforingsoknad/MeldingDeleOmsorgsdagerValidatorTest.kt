@@ -2,12 +2,8 @@ package no.nav.omsorgsdageroverforingsoknad
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.omsorgsdageroverforingsoknad.MeldingDeleOmsorgsdagerUtils.Companion.meldingDeleOmsorgsdager
-import no.nav.omsorgsdageroverforingsoknad.barn.Barn
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.AndreBarn
-import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.MeldingDeleOmsorgsdager
-import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.OverføreTilType
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.valider
-import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.Arbeidssituasjon
 import org.junit.Test
 import java.time.LocalDate
 
@@ -27,7 +23,7 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
     @Test
     fun `Skal ikke feile på gyldig søknad med dnummer`(){
         val melding = meldingDeleOmsorgsdager.copy(
-            fnrMottaker = dNummerA
+            mottakerFnr = dNummerA
         )
         melding.valider()
     }
@@ -44,14 +40,6 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
     fun `Skal feile dersom harForståttRettigheterOgPlikter er false`(){
         val melding = meldingDeleOmsorgsdager.copy(
             harForståttRettigheterOgPlikter = false
-        )
-        melding.valider()
-    }
-
-    @Test(expected = Throwblem::class)
-    fun `Skal feile dersom harBekreftetMottakerOpplysninger er false`(){
-        val melding = meldingDeleOmsorgsdager.copy(
-            harBekreftetMottakerOpplysninger = false
         )
         melding.valider()
     }
@@ -75,38 +63,45 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
     }
 
     @Test(expected = Throwblem::class)
-    fun `Skal feile dersom fnrMottaker ikke er gyldig`(){
+    fun `Skal feile dersom mottakerFnr ikke er gyldig`(){
         val melding = meldingDeleOmsorgsdager.copy(
-            fnrMottaker = "ugyldig"
+            mottakerFnr = "ugyldig"
         )
         melding.valider()
     }
 
     @Test(expected = Throwblem::class)
-    fun `Skal feile dersom antallDagerHarDeltMedAndre er ugyldig og harDeltDagerMedAndre er true`(){
+    fun `Skal feile dersom antallDagerSomSkalOverføres er 0`(){
         val melding = meldingDeleOmsorgsdager.copy(
-            harDeltDagerMedAndreTidligere = true,
-            antallDagerHarDeltMedAndre = 0
+            antallDagerSomSkalOverføres = 0
         )
         melding.valider()
     }
 
     @Test(expected = Throwblem::class)
-    fun `Skal feile dersom antallDagerTilOverføre er 0`(){
+    fun `Skal feile dersom antallDagerBruktEtter1Juli er negativt`(){
         val melding = meldingDeleOmsorgsdager.copy(
-            antallDagerTilOverføre = 0
+            antallDagerBruktEtter1Juli = -1
         )
         melding.valider()
     }
 
     @Test(expected = Throwblem::class)
-    fun `Skal feile dersom andreBarn har ugyldig fnr og ingenFnr er false`(){
+    fun `Skal feile dersom mottakerNavn er ugyldig`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            mottakerNavn = "    "
+        )
+        melding.valider()
+    }
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom andreBarn har ugyldig fnr`(){
         val melding = meldingDeleOmsorgsdager.copy(
             andreBarn = listOf(
                 AndreBarn(
                     fnr = "ikke gyldig",
                     navn = "Barn",
-                    ingenFnr = false
+                    fødselsdato = LocalDate.parse("2020-01-01")
                 )
             )
         )

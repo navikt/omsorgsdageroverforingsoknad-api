@@ -14,7 +14,16 @@ internal fun MeldingDeleOmsorgsdager.valider() {
 
     //TODO: Utvide med mer validering.
 
-    violations.addAll(andreBarn.valider())
+    if (!harForståttRettigheterOgPlikter) {
+        violations.add(
+            Violation(
+                parameterName = "harForståttRettigheterOgPlikter",
+                parameterType = ParameterType.ENTITY,
+                reason = "Må ha forstått rettigheter og plikter for å sende inn søknad.",
+                invalidValue = harForståttRettigheterOgPlikter
+            )
+        )
+    }
 
     if (!harBekreftetOpplysninger) {
         violations.add(
@@ -27,27 +36,7 @@ internal fun MeldingDeleOmsorgsdager.valider() {
         )
     }
 
-    if (!harForståttRettigheterOgPlikter) {
-        violations.add(
-            Violation(
-                parameterName = "harForståttRettigheterOgPlikter",
-                parameterType = ParameterType.ENTITY,
-                reason = "Må ha forstått rettigheter og plikter for å sende inn søknad.",
-                invalidValue = harForståttRettigheterOgPlikter
-            )
-        )
-    }
-
-    if (!harBekreftetMottakerOpplysninger) {
-        violations.add(
-            Violation(
-                parameterName = "harBekreftetMottakerOpplysninger",
-                parameterType = ParameterType.ENTITY,
-                reason = "Må ha bekreftet mottaker opplysninger.",
-                invalidValue = harBekreftetMottakerOpplysninger
-            )
-        )
-    }
+    violations.addAll(andreBarn.valider())
 
     if(harAleneomsorg && harAleneomsorgFor.isEmpty()){
         violations.add(
@@ -71,40 +60,50 @@ internal fun MeldingDeleOmsorgsdager.valider() {
         )
     }
 
-    if(!fnrMottaker.erGyldigNorskIdentifikator()){
+    if(antallDagerBruktEtter1Juli !in 0..MAX_ANTALL_DAGER_MAN_KAN_DELE){
+        violations.add(
+            Violation(
+                parameterName = "antallDagerBruktEtter1Juli",
+                parameterType = ParameterType.ENTITY,
+                reason = "antallDagerBruktEtter1Juli må være mellom 0 og $MAX_ANTALL_DAGER_MAN_KAN_DELE",
+                invalidValue = antallDagerBruktEtter1Juli
+            )
+        )
+    }
+
+    if(!mottakerFnr.erGyldigNorskIdentifikator()){
         violations.add(
             Violation(
                 parameterName = "fnrMottaker",
                 parameterType = ParameterType.ENTITY,
                 reason = "fnrMottaker er ikke gyldig norsk identifikator",
-                invalidValue = fnrMottaker
+                invalidValue = mottakerFnr
             )
         )
     }
 
-    if(harDeltDagerMedAndreTidligere && antallDagerHarDeltMedAndre <= 0){
+    if(mottakerNavn.isBlank()){
         violations.add(
             Violation(
-                parameterName = "harDeltDagerMedAndreTidligere && antallDagerHarDeltMedAndre",
+                parameterName = "mottakerNavn",
                 parameterType = ParameterType.ENTITY,
-                reason = "Hvis harDeltDagerMedAndreTidligere er true så må antallDagerHarDeltMedAndre være større enn 0",
-                invalidValue = antallDagerHarDeltMedAndre
+                reason = "mottakerNavn er tomt eller bare whitespace",
+                invalidValue = mottakerNavn
             )
         )
     }
 
-    if(antallDagerTilOverføre !in MIN_ANTALL_DAGER_MAN_KAN_DELE..MAX_ANTALL_DAGER_MAN_KAN_DELE){
+    if(antallDagerSomSkalOverføres !in MIN_ANTALL_DAGER_MAN_KAN_DELE..MAX_ANTALL_DAGER_MAN_KAN_DELE){
         violations.add(
             Violation(
                 parameterName = "antallDagerTilOverføre",
                 parameterType = ParameterType.ENTITY,
                 reason = "antallDagerTilOverføre må være mellom $MIN_ANTALL_DAGER_MAN_KAN_DELE og $MAX_ANTALL_DAGER_MAN_KAN_DELE",
-                invalidValue = antallDagerTilOverføre
+                invalidValue = antallDagerSomSkalOverføres
             )
         )
     }
 
-// Ser om det er noen valideringsfeil
     if (violations.isNotEmpty()) {
         throw Throwblem(ValidationProblemDetails(violations))
     }
@@ -114,23 +113,13 @@ private fun List<AndreBarn>.valider(): MutableSet<Violation> {
     val violations = mutableSetOf<Violation>()
 
     mapIndexed { index, andreBarn ->
-        if (!andreBarn.ingenFnr && andreBarn.fnr.isNullOrBlank()) {
-            violations.add(
-                Violation(
-                    parameterName = "andreBarn[$index].fnr",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Dersom ingenFnr er false så må fnr være satt",
-                    invalidValue = andreBarn.fnr
-                )
-            )
-        }
 
-        if (!andreBarn.ingenFnr && andreBarn.fnr != null && !andreBarn.fnr.erGyldigNorskIdentifikator()) {
+        if (!andreBarn.fnr.erGyldigNorskIdentifikator()) {
             violations.add(
                 Violation(
                     parameterName = "andreBarn[$index].fnr",
                     parameterType = ParameterType.ENTITY,
-                    reason = "Dersom ingenFnr er false så må fnr være gyldig norsk idenfifikator",
+                    reason = "Fnr er ikke gyldig norsk identifikator",
                     invalidValue = andreBarn.fnr
                 )
             )

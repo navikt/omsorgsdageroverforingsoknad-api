@@ -45,14 +45,11 @@ class MeldingDeleOmsorgsdagerService(
             borINorge = melding.borINorge,
             arbeidINorge = melding.arbeidINorge,
             arbeidssituasjon = melding.arbeidssituasjon,
-            antallDagerHarBruktEtter1Juli = melding.antallDagerHarBruktEtter1Juli,
-            harDeltDagerMedAndreTidligere = melding.harDeltDagerMedAndreTidligere,
-            antallDagerHarDeltMedAndre = melding.antallDagerHarDeltMedAndre,
-            overføreTilType = melding.overføreTilType,
-            fnrMottaker = melding.fnrMottaker,
-            navnMottaker = melding.navnMottaker,
-            antallDagerTilOverføre = melding.antallDagerTilOverføre,
-            harBekreftetMottakerOpplysninger = melding.harBekreftetMottakerOpplysninger
+            antallDagerBruktEtter1Juli = melding.antallDagerBruktEtter1Juli,
+            mottakerType = melding.mottakerType,
+            mottakerFnr = melding.mottakerFnr,
+            mottakerNavn = melding.mottakerNavn,
+            antallDagerSomSkalOverføres = melding.antallDagerSomSkalOverføres
         )
 
         meldingDeleOmsorgsdagerMottakGateway.leggTilProsesseringDeleOmsorgsdager(

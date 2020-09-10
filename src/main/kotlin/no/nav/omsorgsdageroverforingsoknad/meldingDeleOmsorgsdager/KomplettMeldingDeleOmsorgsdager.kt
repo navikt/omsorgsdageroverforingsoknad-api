@@ -19,12 +19,9 @@ data class KomplettMeldingDeleOmsorgsdager(
     val borINorge: Boolean,
     val arbeidINorge: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
-    val antallDagerHarBruktEtter1Juli: Int,
-    val harDeltDagerMedAndreTidligere: Boolean,
-    val antallDagerHarDeltMedAndre: Int,
-    val overføreTilType: OverføreTilType,
-    val fnrMottaker: String,
-    val navnMottaker: String,
-    val antallDagerTilOverføre: Int,
-    val harBekreftetMottakerOpplysninger: Boolean
+    val antallDagerBruktEtter1Juli: Int,
+    val mottakerType: Mottaker,
+    val mottakerFnr: String,
+    val mottakerNavn: String,
+    val antallDagerSomSkalOverføres: Int
 )

@@ -7,7 +7,7 @@ import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.omsorgsdageroverforingsoknad.barn.Barn
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.AndreBarn
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.MeldingDeleOmsorgsdager
-import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.OverføreTilType
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.Mottaker
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.*
 import java.time.LocalDate
 
@@ -26,8 +26,8 @@ class MeldingDeleOmsorgsdagerUtils {
             andreBarn = listOf(
                 AndreBarn(
                     fnr = gyldigfnr,
-                    navn = "Barn Barnesen",
-                    ingenFnr = false
+                    fødselsdato = LocalDate.parse("2020-01-01"),
+                    navn = "Barn Barnesen"
                 )
             ),
             harAleneomsorg = true,
@@ -55,14 +55,11 @@ class MeldingDeleOmsorgsdagerUtils {
             arbeidssituasjon = listOf(
                 Arbeidssituasjon.ARBEIDSTAKER
             ),
-            antallDagerHarBruktEtter1Juli = 10,
-            harDeltDagerMedAndreTidligere = true,
-            antallDagerHarDeltMedAndre = 10,
-            overføreTilType = OverføreTilType.NY_EKTEFELLE,
-            fnrMottaker = gyldigfnr,
-            navnMottaker = "Navn Mottaker",
-            antallDagerTilOverføre = 5,
-            harBekreftetMottakerOpplysninger = true
+            antallDagerBruktEtter1Juli = 10,
+            mottakerType = Mottaker.EKTEFELLE,
+            mottakerFnr = gyldigfnr,
+            mottakerNavn = "Navn Mottaker",
+            antallDagerSomSkalOverføres = 5
         )
 
 
@@ -76,7 +73,7 @@ class MeldingDeleOmsorgsdagerUtils {
                   "andreBarn": [
                     {
                       "fnr": "07068920285",
-                      "ingenFnr": false,
+                      "fødselsdato": "2020-01-01",
                       "navn": "Barn Barnesen"
                     }
                   ],
@@ -105,14 +102,11 @@ class MeldingDeleOmsorgsdagerUtils {
                   "arbeidssituasjon": [
                     "arbeidstaker"
                   ],
-                  "antallDagerHarBruktEtter1Juli": 10,
-                  "harDeltDagerMedAndreTidligere": true,
-                  "antallDagerHarDeltMedAndre": 10,
-                  "overføreTilType": "nyEktefelle",
-                  "fnrMottaker": "07068920285",
-                  "navnMottaker": "Navn Mottaker",
-                  "antallDagerTilOverføre": 5,
-                  "harBekreftetMottakerOpplysninger": true
+                  "antallDagerBruktEtter1Juli": 10,
+                  "mottakerType": "ektefelle",
+                  "mottakerFnr": "07068920285",
+                  "mottakerNavn": "Navn Mottaker",
+                  "antallDagerSomSkalOverføres": 5
                 }
             """.trimIndent()
         }

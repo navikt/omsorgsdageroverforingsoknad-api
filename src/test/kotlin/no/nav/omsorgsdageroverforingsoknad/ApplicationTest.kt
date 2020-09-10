@@ -541,16 +541,16 @@ class ApplicationTest {
                       "detail": "Requesten inneholder ugyldige paramtere.",
                       "instance": "about:blank",
                       "invalid_parameters": [
-                        {
+                      {
                           "type": "entity",
-                          "name": "harBekreftetOpplysninger",
-                          "reason": "Opplysningene må bekreftes for å sende inn søknad.",
+                          "name": "harForståttRettigheterOgPlikter",
+                          "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad.",
                           "invalid_value": false
                         },
                         {
                           "type": "entity",
-                          "name": "harForståttRettigheterOgPlikter",
-                          "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad.",
+                          "name": "harBekreftetOpplysninger",
+                          "reason": "Opplysningene må bekreftes for å sende inn søknad.",
                           "invalid_value": false
                         }
                       ]
@@ -640,8 +640,8 @@ class ApplicationTest {
                 harAleneomsorgFor = listOf(),
                 harUtvidetRett = true,
                 harUtvidetRettFor = listOf(),
-                antallDagerTilOverføre = -1,
-                fnrMottaker = "ikke gyldig"
+                antallDagerSomSkalOverføres = -1,
+                mottakerFnr = "ikke gyldig"
             ).somJson()
         )
     }
