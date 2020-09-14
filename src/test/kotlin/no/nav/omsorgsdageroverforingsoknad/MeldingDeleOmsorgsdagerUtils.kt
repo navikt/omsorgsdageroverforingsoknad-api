@@ -6,6 +6,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.omsorgsdageroverforingsoknad.barn.Barn
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.AndreBarn
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.BarnOgAndreBarn
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.MeldingDeleOmsorgsdager
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.Mottaker
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.*
@@ -31,24 +32,30 @@ class MeldingDeleOmsorgsdagerUtils {
                 )
             ),
             harAleneomsorg = true,
-            harAleneomsorgFor = listOf(
-              Barn(
-                  fødselsdato = LocalDate.parse("2010-01-01"),
-                  aktørId = "12345",
-                  fornavn = "Fornavn",
-                  etternavn = "Etternavn",
-                  mellomnavn = "Mellomnavn"
-              )
+            harAleneomsorgFor = BarnOgAndreBarn(
+                barn = listOf(
+                    Barn(
+                        fødselsdato = LocalDate.parse("2010-01-01"),
+                        aktørId = "12345",
+                        fornavn = "Fornavn",
+                        etternavn = "Etternavn",
+                        mellomnavn = "Mellomnavn"
+                    )
+                ),
+                andreBarn = listOf()
             ),
             harUtvidetRett = true,
-            harUtvidetRettFor = listOf(
-                Barn(
-                    fødselsdato = LocalDate.parse("2010-01-01"),
-                    aktørId = "12345",
-                    fornavn = "Fornavn",
-                    etternavn = "Etternavn",
-                    mellomnavn = "Mellomnavn"
-                )
+            harUtvidetRettFor = BarnOgAndreBarn(
+                barn = listOf(
+                    Barn(
+                        fødselsdato = LocalDate.parse("2010-01-01"),
+                        aktørId = "12345",
+                        fornavn = "Fornavn",
+                        etternavn = "Etternavn",
+                        mellomnavn = "Mellomnavn"
+                    )
+                ),
+                andreBarn = listOf()
             ),
             borINorge = true,
             arbeidINorge = true,
@@ -78,25 +85,43 @@ class MeldingDeleOmsorgsdagerUtils {
                     }
                   ],
                   "harAleneomsorg": true,
-                  "harAleneomsorgFor": [
-                    {
-                      "fødselsdato": "2010-01-01",
-                      "fornavn": "Fornavn",
-                      "mellomnavn": "Mellomnavn",
-                      "etternavn": "Etternavn",
-                      "aktørId": "12345"
-                    }
-                  ],
+                  "harAleneomsorgFor": {
+                    "barn": [
+                      {
+                        "fødselsdato": "2010-01-01",
+                        "fornavn": "Fornavn",
+                        "mellomnavn": "Mellomnavn",
+                        "etternavn": "Etternavn",
+                        "aktørId": "12345"
+                      }
+                    ],
+                    "andreBarn": [
+                      {
+                        "fødselsdato": "2010-01-01",
+                        "navn": "Fornavn",
+                        "fnr": "07068920285"
+                      }
+                    ]
+                  },
                   "harUtvidetRett": true,
-                  "harUtvidetRettFor": [
-                    {
-                      "fødselsdato": "2010-01-01",
-                      "fornavn": "Fornavn",
-                      "mellomnavn": "Mellomnavn",
-                      "etternavn": "Etternavn",
-                      "aktørId": "12345"
-                    }
-                  ],
+                  "harUtvidetRettFor": {
+                    "barn": [
+                      {
+                        "fødselsdato": "2010-01-01",
+                        "fornavn": "Fornavn",
+                        "mellomnavn": "Mellomnavn",
+                        "etternavn": "Etternavn",
+                        "aktørId": "12345"
+                      }
+                    ],
+                    "andreBarn": [
+                      {
+                        "fødselsdato": "2010-01-01",
+                        "navn": "Fornavn",
+                        "fnr": "07068920285"
+                      }
+                    ]
+                  },
                   "borINorge": true,
                   "arbeidINorge": true,
                   "arbeidssituasjon": [

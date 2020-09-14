@@ -38,7 +38,7 @@ internal fun MeldingDeleOmsorgsdager.valider() {
 
     violations.addAll(andreBarn.valider())
 
-    if(harAleneomsorg && harAleneomsorgFor.isEmpty()){
+    if(harAleneomsorg && harAleneomsorgFor.erTom()){
         violations.add(
             Violation(
                 parameterName = "harAleneomsorgFor && harAleneomsorg",
@@ -49,7 +49,9 @@ internal fun MeldingDeleOmsorgsdager.valider() {
         )
     }
 
-    if(harUtvidetRett && harUtvidetRettFor.isEmpty()){
+    violations.addAll(harAleneomsorgFor.valider("harAleneomsorgFor."))
+
+    if(harUtvidetRett && harUtvidetRettFor.erTom()){
         violations.add(
             Violation(
                 parameterName = "harUtvidetRettFor && harUtvidetRett",
@@ -59,6 +61,8 @@ internal fun MeldingDeleOmsorgsdager.valider() {
             )
         )
     }
+
+    violations.addAll(harUtvidetRettFor.valider("harUtvidetRettFor."))
 
     if(antallDagerBruktEtter1Juli !in 0..MAX_ANTALL_DAGER_MAN_KAN_DELE){
         violations.add(
@@ -109,22 +113,37 @@ internal fun MeldingDeleOmsorgsdager.valider() {
     }
 }
 
-private fun List<AndreBarn>.valider(): MutableSet<Violation> {
+private fun List<AndreBarn>.valider(prefixSti: String = ""): MutableSet<Violation> {
     val violations = mutableSetOf<Violation>()
 
     mapIndexed { index, andreBarn ->
-
-        if (!andreBarn.fnr.erGyldigNorskIdentifikator()) {
-            violations.add(
-                Violation(
-                    parameterName = "andreBarn[$index].fnr",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Fnr er ikke gyldig norsk identifikator",
-                    invalidValue = andreBarn.fnr
-                )
-            )
-        }
+        violations.addAll(andreBarn.valider(prefixSti, index))
     }
+
+    return violations
+}
+
+private fun AndreBarn.valider(prefixSti: String? = "", index: Int): MutableSet<Violation>{
+    val violations = mutableSetOf<Violation>()
+
+    if(!fnr.erGyldigNorskIdentifikator()){
+        violations.add(
+            Violation(
+                parameterName = "${prefixSti}andreBarn[$index].fnr",
+                parameterType = ParameterType.ENTITY,
+                reason = "Fnr er ikke gyldig norsk identifikator",
+                invalidValue = fnr
+            )
+        )
+    }
+
+    return violations
+}
+
+private fun BarnOgAndreBarn.valider(prefixSti: String): MutableSet<Violation>{
+    val violations = mutableSetOf<Violation>()
+
+    violations.addAll(andreBarn.valider(prefixSti))
 
     return violations
 }

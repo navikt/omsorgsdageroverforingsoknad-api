@@ -14,10 +14,7 @@ import io.ktor.server.testing.setBody
 import io.ktor.util.KtorExperimentalAPI
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.helse.getAuthCookie
-import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.DELE_DAGER_API_URL
-import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.DELE_DAGER_MOTTAK_URL
-import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.MAX_ANTALL_DAGER_MAN_KAN_DELE
-import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.MIN_ANTALL_DAGER_MAN_KAN_DELE
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.*
 import no.nav.omsorgsdageroverforingsoknad.redis.RedisMockUtil
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.MAX_ANTALL_DAGER_MAN_KAN_OVERFØRE
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.MIN_ANTALL_DAGER_MAN_KAN_OVERFØRE
@@ -28,6 +25,7 @@ import org.skyscreamer.jsonassert.JSONAssert
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
+import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -606,17 +604,27 @@ class ApplicationTest {
                       "type": "entity",
                       "name": "harAleneomsorgFor && harAleneomsorg",
                       "reason": "Dersom harAleneomsorg er true kan ikke harAleneomsorgFor være tom",
-                      "invalid_value": [
-                        
-                      ]
+                      "invalid_value": {
+                        "barn": [
+                          
+                        ],
+                        "andreBarn": [
+                          
+                        ]
+                      }
                     },
                     {
                       "type": "entity",
                       "name": "harUtvidetRettFor && harUtvidetRett",
                       "reason": "Dersom harUtvidetRett er true kan ikke harUtvidetRettFor være tom",
-                      "invalid_value": [
-                        
-                      ]
+                      "invalid_value": {
+                        "barn": [
+                          
+                        ],
+                        "andreBarn": [
+                          
+                        ]
+                      }
                     },
                     {
                       "type": "entity",
@@ -627,7 +635,7 @@ class ApplicationTest {
                     {
                       "type": "entity",
                       "name": "antallDagerTilOverføre",
-                      "reason": "antallDagerTilOverføre må være mellom $MIN_ANTALL_DAGER_MAN_KAN_DELE og ${MAX_ANTALL_DAGER_MAN_KAN_DELE}",
+                      "reason": "antallDagerTilOverføre må være mellom $MIN_ANTALL_DAGER_MAN_KAN_DELE og $MAX_ANTALL_DAGER_MAN_KAN_DELE",
                       "invalid_value": -1
                     }
                   ]
@@ -637,11 +645,60 @@ class ApplicationTest {
             cookie = cookie,
             requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.copy(
                 harAleneomsorg = true,
-                harAleneomsorgFor = listOf(),
+                harAleneomsorgFor = BarnOgAndreBarn(
+                    barn = listOf(),
+                    andreBarn = listOf()
+                ),
                 harUtvidetRett = true,
-                harUtvidetRettFor = listOf(),
+                harUtvidetRettFor = BarnOgAndreBarn(
+                    barn = listOf(),
+                    andreBarn = listOf()
+                ),
                 antallDagerSomSkalOverføres = -1,
                 mottakerFnr = "ikke gyldig"
+            ).somJson()
+        )
+    }
+
+
+    @Test
+    fun `Sende ugyldig melding om deling av omsorgsdager hvor harUtvidetRettFor inneholder AndreBarn med ugydlig fnr`(){
+        val cookie = getAuthCookie(gyldigFodselsnummerA)
+
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = DELE_DAGER_API_URL,
+            //language=JSON
+            expectedResponse = """
+                    {
+                      "type": "/problem-details/invalid-request-parameters",
+                      "title": "invalid-request-parameters",
+                      "status": 400,
+                      "detail": "Requesten inneholder ugyldige paramtere.",
+                      "instance": "about:blank",
+                      "invalid_parameters": [
+                        {
+                          "type": "entity",
+                          "name": "harUtvidetRettFor.andreBarn[0].fnr",
+                          "reason": "Fnr er ikke gyldig norsk identifikator",
+                          "invalid_value": "ugydlig"
+                        }
+                      ]
+                    }
+            """.trimIndent(),
+            expectedCode = HttpStatusCode.BadRequest,
+            cookie = cookie,
+            requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.copy(
+                harUtvidetRettFor = BarnOgAndreBarn(
+                    barn = listOf(),
+                    andreBarn = listOf(
+                        AndreBarn(
+                            fnr = "ugydlig",
+                            navn = "Barn",
+                            fødselsdato = LocalDate.parse("2020-01-01")
+                        )
+                    )
+                )
             ).somJson()
         )
     }

@@ -3,6 +3,7 @@ package no.nav.omsorgsdageroverforingsoknad
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.omsorgsdageroverforingsoknad.MeldingDeleOmsorgsdagerUtils.Companion.meldingDeleOmsorgsdager
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.AndreBarn
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.BarnOgAndreBarn
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.valider
 import org.junit.Test
 import java.time.LocalDate
@@ -48,7 +49,10 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
     fun `Skal feile dersom harAleneomsorg er true mens harAleneomsorgFor er tom`(){
         val melding = meldingDeleOmsorgsdager.copy(
             harAleneomsorg = true,
-            harAleneomsorgFor = listOf()
+            harAleneomsorgFor = BarnOgAndreBarn(
+                barn = listOf(),
+                andreBarn = listOf()
+            )
         )
         melding.valider()
     }
@@ -57,7 +61,10 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
     fun `Skal feile dersom harUtvidetRett er true mens harUtvidetRettFor er tom`(){
         val melding = meldingDeleOmsorgsdager.copy(
             harUtvidetRett = true,
-            harUtvidetRettFor= listOf()
+            harUtvidetRettFor= BarnOgAndreBarn(
+                barn = listOf(),
+                andreBarn = listOf()
+            )
         )
         melding.valider()
     }
@@ -102,6 +109,23 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
                     fnr = "ikke gyldig",
                     navn = "Barn",
                     fødselsdato = LocalDate.parse("2020-01-01")
+                )
+            )
+        )
+        melding.valider()
+    }
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom andreBarn inne i harUtvidetRettFor har ugyldig fnr`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            harUtvidetRettFor = BarnOgAndreBarn(
+                barn = listOf(),
+                andreBarn = listOf(
+                    AndreBarn(
+                        fnr = "ikke gyldig",
+                        navn = "Barn",
+                        fødselsdato = LocalDate.parse("2020-01-01")
+                    )
                 )
             )
         )
