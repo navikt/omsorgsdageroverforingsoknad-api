@@ -35,8 +35,9 @@ class BarnGateway (
             "barn[].fornavn",
             "barn[].mellomnavn",
             "barn[].etternavn",
-            "barn[].fødselsdato",
-            "barn[].identitetsnummer")
+            "barn[].fødselsdato"
+            //"barn[].identitetsnummer"
+            )
         )
     }
 

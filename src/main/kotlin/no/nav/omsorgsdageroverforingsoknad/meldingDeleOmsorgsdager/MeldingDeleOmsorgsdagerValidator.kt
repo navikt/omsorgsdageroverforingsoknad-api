@@ -81,7 +81,7 @@ internal fun MeldingDeleOmsorgsdager.valider() {
         )
     }
 
-    violations.addAll(barn.valider())
+    //violations.addAll(barn.valider())
 
     if (violations.isNotEmpty()) {
         throw Throwblem(ValidationProblemDetails(violations))
