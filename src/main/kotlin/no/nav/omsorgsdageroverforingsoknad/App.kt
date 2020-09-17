@@ -4,20 +4,15 @@ import com.auth0.jwk.JwkProviderBuilder
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.*
-import io.ktor.auth.Authentication
-import io.ktor.auth.authenticate
-import io.ktor.auth.jwt.JWTPrincipal
-import io.ktor.auth.jwt.jwt
+import io.ktor.auth.*
+import io.ktor.auth.jwt.*
 import io.ktor.features.*
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.Url
-import io.ktor.jackson.jackson
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Locations
-import io.ktor.metrics.micrometer.MicrometerMetrics
-import io.ktor.routing.Routing
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.http.*
+import io.ktor.jackson.*
+import io.ktor.locations.*
+import io.ktor.metrics.micrometer.*
+import io.ktor.routing.*
+import io.ktor.util.*
 import io.prometheus.client.hotspot.DefaultExports
 import no.nav.helse.dusseldorf.ktor.auth.clients
 import no.nav.helse.dusseldorf.ktor.client.HttpRequestHealthCheck
@@ -48,8 +43,8 @@ import no.nav.omsorgsdageroverforingsoknad.soker.SøkerGateway
 import no.nav.omsorgsdageroverforingsoknad.soker.SøkerService
 import no.nav.omsorgsdageroverforingsoknad.soker.søkerApis
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.OmsorgsdageroverforingsøknadMottakGateway
-import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.søknadApis
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.SøknadOverføreDagerService
+import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.søknadApis
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
@@ -153,6 +148,10 @@ fun Application.omsorgsdageroverforingsoknadapi() {
             apiGatewayApiKey = apiGatewayApiKey
         )
 
+        val barnService = BarnService(
+            barnGateway = barnGateway
+        )
+
         val søkerService = SøkerService(
             søkerGateway = sokerGateway
         )
@@ -165,9 +164,7 @@ fun Application.omsorgsdageroverforingsoknadapi() {
             )
 
             barnApis(
-                barnService = BarnService(
-                    barnGateway = barnGateway
-                ),
+                barnService = barnService,
                 idTokenProvider = idTokenProvider
             )
 
@@ -190,7 +187,8 @@ fun Application.omsorgsdageroverforingsoknadapi() {
                 meldingDeleOmsorgsdagerService = MeldingDeleOmsorgsdagerService(
                     meldingDeleOmsorgsdagerMottakGateway = meldingDeleOmsorgsdagerMottakGateway,
                     søkerService = søkerService
-                )
+                ),
+                barnService = barnService
             )
         }
 

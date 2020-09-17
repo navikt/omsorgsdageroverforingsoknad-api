@@ -2,16 +2,10 @@ package no.nav.omsorgsdageroverforingsoknad
 
 import com.github.tomakehurst.wiremock.http.Cookie
 import com.typesafe.config.ConfigFactory
-import io.ktor.config.ApplicationConfig
-import io.ktor.config.HoconApplicationConfig
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.testing.TestApplicationEngine
-import io.ktor.server.testing.createTestEnvironment
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.setBody
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.config.*
+import io.ktor.http.*
+import io.ktor.server.testing.*
+import io.ktor.util.*
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.helse.getAuthCookie
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.*
@@ -89,6 +83,8 @@ class ApplicationTest {
             logger.info("Tear down complete")
         }
     }
+
+    //TODO: Flerer tester som sjekker at BARN har fått identitetsnummer
 
     @Test
     fun `test isready, isalive, health og metrics`() {
@@ -192,6 +188,36 @@ class ApplicationTest {
             path = "/soker",
             expectedCode = HttpStatusCode.OK,
             expectedResponse = expectedGetSokerJson(fnr)
+        )
+    }
+
+    @Test
+    fun `Hente barn og sjekk at identitetsnummer ikke blir med ved get kall`(){
+        requestAndAssert(
+            httpMethod = HttpMethod.Get,
+            path = "/barn",
+            expectedCode = HttpStatusCode.OK,
+            //language=json
+            expectedResponse = """
+                {
+                  "barn": [
+                    {
+                      "fødselsdato": "2000-08-27",
+                      "fornavn": "BARN",
+                      "mellomnavn": "EN",
+                      "etternavn": "BARNESEN",
+                      "aktørId": "1000000000001"
+                    },
+                    {
+                      "fødselsdato": "2001-04-10",
+                      "fornavn": "BARN",
+                      "mellomnavn": "TO",
+                      "etternavn": "BARNESEN",
+                      "aktørId": "1000000000002"
+                    }
+                  ]
+                }
+            """.trimIndent()
         )
     }
 
@@ -511,7 +537,7 @@ class ApplicationTest {
 
     @Test
     fun `Sende gyldig melding om deling av omsorgsdager`(){
-        val cookie = getAuthCookie(gyldigFodselsnummerA)
+        val cookie = getAuthCookie(fnr)
 
         requestAndAssert(
             httpMethod = HttpMethod.Post,
@@ -592,7 +618,9 @@ class ApplicationTest {
         requestAndAssert(
             httpMethod = HttpMethod.Post,
             path = DELE_DAGER_API_URL,
-            expectedResponse = """
+            expectedResponse =
+            //language=json
+            """
                 {
                   "type": "/problem-details/invalid-request-parameters",
                   "title": "invalid-request-parameters",
@@ -600,32 +628,6 @@ class ApplicationTest {
                   "detail": "Requesten inneholder ugyldige paramtere.",
                   "instance": "about:blank",
                   "invalid_parameters": [
-                    {
-                      "type": "entity",
-                      "name": "harAleneomsorgFor && harAleneomsorg",
-                      "reason": "Dersom harAleneomsorg er true kan ikke harAleneomsorgFor være tom",
-                      "invalid_value": {
-                        "barn": [
-                          
-                        ],
-                        "andreBarn": [
-                          
-                        ]
-                      }
-                    },
-                    {
-                      "type": "entity",
-                      "name": "harUtvidetRettFor && harUtvidetRett",
-                      "reason": "Dersom harUtvidetRett er true kan ikke harUtvidetRettFor være tom",
-                      "invalid_value": {
-                        "barn": [
-                          
-                        ],
-                        "andreBarn": [
-                          
-                        ]
-                      }
-                    },
                     {
                       "type": "entity",
                       "name": "fnrMottaker",
@@ -637,6 +639,12 @@ class ApplicationTest {
                       "name": "antallDagerTilOverføre",
                       "reason": "antallDagerTilOverføre må være mellom $MIN_ANTALL_DAGER_MAN_KAN_DELE og $MAX_ANTALL_DAGER_MAN_KAN_DELE",
                       "invalid_value": -1
+                    },
+                    {
+                      "type": "entity",
+                      "name": "barn[0].identitetsnummer",
+                      "reason": "identitetsnummer er ikke gyldig norsk identifikator",
+                      "invalid_value": "1"
                     }
                   ]
                 }
@@ -644,64 +652,65 @@ class ApplicationTest {
             expectedCode = HttpStatusCode.BadRequest,
             cookie = cookie,
             requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.copy(
-                harAleneomsorg = true,
-                harAleneomsorgFor = BarnOgAndreBarn(
-                    barn = listOf(),
-                    andreBarn = listOf()
-                ),
-                harUtvidetRett = true,
-                harUtvidetRettFor = BarnOgAndreBarn(
-                    barn = listOf(),
-                    andreBarn = listOf()
-                ),
                 antallDagerSomSkalOverføres = -1,
-                mottakerFnr = "ikke gyldig"
-            ).somJson()
-        )
-    }
-
-
-    @Test
-    fun `Sende ugyldig melding om deling av omsorgsdager hvor harUtvidetRettFor inneholder AndreBarn med ugydlig fnr`(){
-        val cookie = getAuthCookie(gyldigFodselsnummerA)
-
-        requestAndAssert(
-            httpMethod = HttpMethod.Post,
-            path = DELE_DAGER_API_URL,
-            //language=JSON
-            expectedResponse = """
-                    {
-                      "type": "/problem-details/invalid-request-parameters",
-                      "title": "invalid-request-parameters",
-                      "status": 400,
-                      "detail": "Requesten inneholder ugyldige paramtere.",
-                      "instance": "about:blank",
-                      "invalid_parameters": [
-                        {
-                          "type": "entity",
-                          "name": "harUtvidetRettFor.andreBarn[0].fnr",
-                          "reason": "Fnr er ikke gyldig norsk identifikator",
-                          "invalid_value": "ugydlig"
-                        }
-                      ]
-                    }
-            """.trimIndent(),
-            expectedCode = HttpStatusCode.BadRequest,
-            cookie = cookie,
-            requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.copy(
-                harUtvidetRettFor = BarnOgAndreBarn(
-                    barn = listOf(),
-                    andreBarn = listOf(
-                        AndreBarn(
-                            fnr = "ugydlig",
-                            navn = "Barn",
-                            fødselsdato = LocalDate.parse("2020-01-01")
-                        )
+                mottakerFnr = "ikke gyldig",
+                barn = listOf(
+                    BarnUtvidet(
+                        identitetsnummer = "1",
+                        aktørId = null,
+                        fødselsdato = LocalDate.parse("2020-01-01"),
+                        navn = "Barn Barnesen",
+                        aleneOmOmsorgen = true,
+                        utvidetRett = true
                     )
                 )
             ).somJson()
         )
     }
+
+    @Test
+    fun `Sende melding hvor barn har ugydlig identitetsnummer`(){
+        val cookie = getAuthCookie(fnr)
+
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = DELE_DAGER_API_URL,
+            expectedResponse =
+            //language=json
+            """
+                {
+                  "type": "/problem-details/invalid-request-parameters",
+                  "title": "invalid-request-parameters",
+                  "status": 400,
+                  "detail": "Requesten inneholder ugyldige paramtere.",
+                  "instance": "about:blank",
+                  "invalid_parameters": [
+                    {
+                      "type": "entity",
+                      "name": "barn[0].identitetsnummer",
+                      "reason": "identitetsnummer er ikke gyldig norsk identifikator",
+                      "invalid_value": "Ikke gyldig 111"
+                    }
+                  ]
+                }
+            """.trimIndent(),
+            expectedCode = HttpStatusCode.BadRequest,
+            cookie = cookie,
+            requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.copy(
+                barn = listOf(
+                    BarnUtvidet(
+                        identitetsnummer = "Ikke gyldig 111",
+                        aktørId = null,
+                        fødselsdato = LocalDate.parse("2020-01-01"),
+                        navn = "Barn Barnesen",
+                        aleneOmOmsorgen = true,
+                        utvidetRett = true
+                    )
+                )
+            ).somJson()
+        )
+    }
+
 
    private fun requestAndAssert(
         httpMethod: HttpMethod,

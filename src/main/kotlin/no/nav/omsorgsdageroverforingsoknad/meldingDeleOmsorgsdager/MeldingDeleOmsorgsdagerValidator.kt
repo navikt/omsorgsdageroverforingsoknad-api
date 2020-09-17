@@ -6,7 +6,7 @@ import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.erGyldigNorskIdentifikator
 
-val MAX_ANTALL_DAGER_MAN_KAN_DELE = 999
+val MAX_ANTALL_DAGER_MAN_KAN_DELE = 10
 val MIN_ANTALL_DAGER_MAN_KAN_DELE = 1
 
 internal fun MeldingDeleOmsorgsdager.valider() {
@@ -36,41 +36,14 @@ internal fun MeldingDeleOmsorgsdager.valider() {
         )
     }
 
-    violations.addAll(andreBarn.valider())
 
-    if(harAleneomsorg && harAleneomsorgFor.erTom()){
+    if(antallDagerBruktIÅr !in 0..MAX_ANTALL_DAGER_MAN_KAN_DELE){
         violations.add(
             Violation(
-                parameterName = "harAleneomsorgFor && harAleneomsorg",
+                parameterName = "antallDagerBruktIÅr",
                 parameterType = ParameterType.ENTITY,
-                reason = "Dersom harAleneomsorg er true kan ikke harAleneomsorgFor være tom",
-                invalidValue = harAleneomsorgFor
-            )
-        )
-    }
-
-    violations.addAll(harAleneomsorgFor.valider("harAleneomsorgFor."))
-
-    if(harUtvidetRett && harUtvidetRettFor.erTom()){
-        violations.add(
-            Violation(
-                parameterName = "harUtvidetRettFor && harUtvidetRett",
-                parameterType = ParameterType.ENTITY,
-                reason = "Dersom harUtvidetRett er true kan ikke harUtvidetRettFor være tom",
-                invalidValue = harUtvidetRettFor
-            )
-        )
-    }
-
-    violations.addAll(harUtvidetRettFor.valider("harUtvidetRettFor."))
-
-    if(antallDagerBruktEtter1Juli !in 0..MAX_ANTALL_DAGER_MAN_KAN_DELE){
-        violations.add(
-            Violation(
-                parameterName = "antallDagerBruktEtter1Juli",
-                parameterType = ParameterType.ENTITY,
-                reason = "antallDagerBruktEtter1Juli må være mellom 0 og $MAX_ANTALL_DAGER_MAN_KAN_DELE",
-                invalidValue = antallDagerBruktEtter1Juli
+                reason = "antallDagerBruktIÅr må være mellom 0 og $MAX_ANTALL_DAGER_MAN_KAN_DELE",
+                invalidValue = antallDagerBruktIÅr
             )
         )
     }
@@ -108,42 +81,41 @@ internal fun MeldingDeleOmsorgsdager.valider() {
         )
     }
 
+    violations.addAll(barn.valider())
+
     if (violations.isNotEmpty()) {
         throw Throwblem(ValidationProblemDetails(violations))
     }
 }
 
-private fun List<AndreBarn>.valider(prefixSti: String = ""): MutableSet<Violation> {
-    val violations = mutableSetOf<Violation>()
+private fun List<BarnUtvidet>.valider(): MutableSet<Violation> {
+    val violations: MutableSet<Violation> = mutableSetOf<Violation>()
 
-    mapIndexed { index, andreBarn ->
-        violations.addAll(andreBarn.valider(prefixSti, index))
-    }
-
-    return violations
-}
-
-private fun AndreBarn.valider(prefixSti: String? = "", index: Int): MutableSet<Violation>{
-    val violations = mutableSetOf<Violation>()
-
-    if(!fnr.erGyldigNorskIdentifikator()){
-        violations.add(
-            Violation(
-                parameterName = "${prefixSti}andreBarn[$index].fnr",
-                parameterType = ParameterType.ENTITY,
-                reason = "Fnr er ikke gyldig norsk identifikator",
-                invalidValue = fnr
+    forEachIndexed { index, barnUtvidet ->
+        if(barnUtvidet.identitetsnummer.isNullOrEmpty()){
+            violations.add(
+                Violation(
+                    parameterName = "barn[$index].identitetsnummer",
+                    parameterType = ParameterType.ENTITY,
+                    reason = "identitetsnummer er tom eller null",
+                    invalidValue = barnUtvidet.identitetsnummer
+                )
             )
-        )
+        }
+
+        if(barnUtvidet.identitetsnummer != null){
+            if(!barnUtvidet.identitetsnummer!!.erGyldigNorskIdentifikator()){
+                violations.add(
+                    Violation(
+                        parameterName = "barn[$index].identitetsnummer",
+                        parameterType = ParameterType.ENTITY,
+                        reason = "identitetsnummer er ikke gyldig norsk identifikator",
+                        invalidValue = barnUtvidet.identitetsnummer
+                    )
+                )
+            }
+        }
     }
-
-    return violations
-}
-
-private fun BarnOgAndreBarn.valider(prefixSti: String): MutableSet<Violation>{
-    val violations = mutableSetOf<Violation>()
-
-    violations.addAll(andreBarn.valider(prefixSti))
 
     return violations
 }

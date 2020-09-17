@@ -1,13 +1,12 @@
 package no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager
 
-import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Location
-import io.ktor.locations.post
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.Route
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.locations.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
+import no.nav.omsorgsdageroverforingsoknad.barn.BarnService
 import no.nav.omsorgsdageroverforingsoknad.general.auth.IdTokenProvider
 import no.nav.omsorgsdageroverforingsoknad.general.getCallId
 import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.DELE_DAGER_API_URL
@@ -23,6 +22,7 @@ private val logger: Logger = LoggerFactory.getLogger("nav.soknadApis")
 fun Route.søknadApis(
     søknadOverføreDagerService: SøknadOverføreDagerService,
     meldingDeleOmsorgsdagerService: MeldingDeleOmsorgsdagerService,
+    barnService: BarnService,
     idTokenProvider: IdTokenProvider
 ) {
 
@@ -54,8 +54,15 @@ fun Route.søknadApis(
     post { _ : sendMeldingDeleOmsorgsdager ->
         logger.trace("Mottatt ny melding for deling av omsorgsdager. Mapper melding.")
         val melding = call.receive<MeldingDeleOmsorgsdager>()
-        logger.trace("Søknad mappet. Validerer")
+        logger.trace("Søknad mappet.")
 
+        logger.trace("Oppdaterer barn med fnr")
+        val listeOverBarn = barnService.hentNaaverendeBarn(idTokenProvider.getIdToken(call), call.getCallId())
+        melding.oppdaterBarnUtvidetMedFnr(listeOverBarn)
+        logger.trace("Oppdatering av barn OK")
+
+        logger.trace("Validerer melding.")
+        logger.trace("---> {}", melding.toString())
         melding.valider()
         logger.trace("Validering OK. Registrerer melding.")
 

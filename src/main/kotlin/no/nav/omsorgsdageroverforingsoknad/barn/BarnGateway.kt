@@ -5,7 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
-import io.ktor.http.Url
+import io.ktor.http.*
 import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.helse.dusseldorf.ktor.core.Retry
 import no.nav.helse.dusseldorf.ktor.metrics.Operation
@@ -35,7 +35,8 @@ class BarnGateway (
             "barn[].fornavn",
             "barn[].mellomnavn",
             "barn[].etternavn",
-            "barn[].fødselsdato")
+            "barn[].fødselsdato",
+            "barn[].identitetsnummer")
         )
     }
 
@@ -84,6 +85,7 @@ class BarnGateway (
         val fornavn: String,
         val mellomnavn: String? = null,
         val etternavn: String,
-        val aktør_id: String
+        val aktør_id: String,
+        val identitetsnummer: String? = null
     )
 }
