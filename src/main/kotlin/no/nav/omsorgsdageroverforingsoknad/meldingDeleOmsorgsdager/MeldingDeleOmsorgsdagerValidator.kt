@@ -8,6 +8,7 @@ import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.erGyldigNorskIden
 
 val MAX_ANTALL_DAGER_MAN_KAN_DELE = 10
 val MIN_ANTALL_DAGER_MAN_KAN_DELE = 1
+val MAX_ANTALL_MAN_KAN_HA_DELT_I_ÅR = 999
 
 internal fun MeldingDeleOmsorgsdager.valider() {
     val violations: MutableSet<Violation> = mutableSetOf<Violation>()
@@ -37,12 +38,12 @@ internal fun MeldingDeleOmsorgsdager.valider() {
     }
 
 
-    if(antallDagerBruktIÅr !in 0..MAX_ANTALL_DAGER_MAN_KAN_DELE){
+    if(antallDagerBruktIÅr !in 0..MAX_ANTALL_MAN_KAN_HA_DELT_I_ÅR){
         violations.add(
             Violation(
                 parameterName = "antallDagerBruktIÅr",
                 parameterType = ParameterType.ENTITY,
-                reason = "antallDagerBruktIÅr må være mellom 0 og $MAX_ANTALL_DAGER_MAN_KAN_DELE",
+                reason = "antallDagerBruktIÅr må være mellom 0 og $MAX_ANTALL_MAN_KAN_HA_DELT_I_ÅR",
                 invalidValue = antallDagerBruktIÅr
             )
         )

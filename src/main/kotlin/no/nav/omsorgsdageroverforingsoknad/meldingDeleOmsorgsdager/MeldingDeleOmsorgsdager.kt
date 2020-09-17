@@ -12,7 +12,7 @@ data class MeldingDeleOmsorgsdager(
     val harBekreftetOpplysninger: Boolean,
     val barn: List<BarnUtvidet>,
     val borINorge: Boolean,
-    val arbeidINorge: Boolean,
+    val arbeiderINorge: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
     val mottakerType: Mottaker,
     val mottakerFnr: String,

@@ -39,7 +39,7 @@ class MeldingDeleOmsorgsdagerService(
             harBekreftetOpplysninger = melding.harBekreftetOpplysninger,
             barn = melding.barn,
             borINorge = melding.borINorge,
-            arbeidINorge = melding.arbeidINorge,
+            arbeiderINorge = melding.arbeiderINorge,
             arbeidssituasjon = melding.arbeidssituasjon,
             antallDagerBruktIÅr = melding.antallDagerBruktIÅr,
             mottakerType = melding.mottakerType,
