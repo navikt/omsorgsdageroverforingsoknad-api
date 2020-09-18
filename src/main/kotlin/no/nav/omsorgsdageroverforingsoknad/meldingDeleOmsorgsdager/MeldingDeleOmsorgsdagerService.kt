@@ -35,6 +35,7 @@ class MeldingDeleOmsorgsdagerService(
             mottatt = ZonedDateTime.now(ZoneOffset.UTC),
             søker = søker,
             språk = melding.språk,
+            id = melding.id,
             harForståttRettigheterOgPlikter = melding.harForståttRettigheterOgPlikter,
             harBekreftetOpplysninger = melding.harBekreftetOpplysninger,
             barn = melding.barn,

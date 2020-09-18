@@ -20,6 +20,7 @@ class MeldingDeleOmsorgsdagerUtils {
 
         val meldingDeleOmsorgsdager = MeldingDeleOmsorgsdager(
             språk = "nb",
+            id = "1",
             harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true,
             barn = listOf(
@@ -50,6 +51,7 @@ class MeldingDeleOmsorgsdagerUtils {
             return """
             {
               "språk": "nb",
+              "id": "1",
               "harForståttRettigheterOgPlikter": true,
               "harBekreftetOpplysninger": true,
               "barn": [

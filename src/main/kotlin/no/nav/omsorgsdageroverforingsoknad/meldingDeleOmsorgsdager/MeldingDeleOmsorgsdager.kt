@@ -10,6 +10,7 @@ import java.time.LocalDate
 
 
 data class MeldingDeleOmsorgsdager(
+    val id: String,
     val språk: String,
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,

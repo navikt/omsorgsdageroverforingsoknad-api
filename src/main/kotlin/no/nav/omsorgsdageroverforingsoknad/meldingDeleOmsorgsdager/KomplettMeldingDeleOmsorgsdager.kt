@@ -8,6 +8,7 @@ data class KomplettMeldingDeleOmsorgsdager(
     val mottatt: ZonedDateTime,
     val søker: Søker,
     val språk: String,
+    val id: String,
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val barn: List<BarnUtvidet>,
