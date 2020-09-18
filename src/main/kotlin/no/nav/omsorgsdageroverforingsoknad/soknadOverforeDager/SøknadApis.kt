@@ -52,19 +52,19 @@ fun Route.søknadApis(
     class sendMeldingDeleOmsorgsdager
 
     post { _ : sendMeldingDeleOmsorgsdager ->
-        logger.trace("Mottatt ny melding for deling av omsorgsdager. Mapper melding.")
+        logger.info("Mottatt ny melding for deling av omsorgsdager. Mapper melding.")
         val melding = call.receive<MeldingDeleOmsorgsdager>()
         logger.trace("Søknad mappet.")
 
-        logger.trace("Oppdaterer barn med fnr")
+        logger.info("Oppdaterer barn med fnr")
         val listeOverBarn = barnService.hentNaaverendeBarn(idTokenProvider.getIdToken(call), call.getCallId())
         melding.oppdaterBarnUtvidetMedFnr(listeOverBarn)
-        logger.trace("Oppdatering av barn OK")
+        logger.info("Oppdatering av barn OK")
 
-        logger.trace("Validerer melding.")
-        logger.trace("---> {}", melding.toString())
+        logger.info("Validerer melding.")
+        logger.info("---> {}", melding.toString()) //TODO Fjernes ved prodsetting
         melding.valider()
-        logger.trace("Validering OK. Registrerer melding.")
+        logger.info("Validering OK. Registrerer melding.")
 
         meldingDeleOmsorgsdagerService.registrer(
             melding = melding,
@@ -72,7 +72,7 @@ fun Route.søknadApis(
             idToken = idTokenProvider.getIdToken(call)
         )
 
-        logger.trace("Melding registrert.")
+        logger.info("Melding registrert.")
         call.respond(HttpStatusCode.Accepted)
     }
 }
