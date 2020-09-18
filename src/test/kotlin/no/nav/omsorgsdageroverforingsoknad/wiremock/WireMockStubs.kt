@@ -48,7 +48,7 @@ internal fun WireMockServer.stubK9OppslagBarn(simulerFeil: Boolean = false) : Wi
             .withQueryParam("a", equalTo("barn[].mellomnavn"))
             .withQueryParam("a", equalTo("barn[].etternavn"))
             .withQueryParam("a", equalTo("barn[].fødselsdato"))
-            //.withQueryParam("a", equalTo("barn[].identitetsnummer"))
+            .withQueryParam("a", equalTo("barn[].identitetsnummer"))
             .willReturn(
                 WireMock.aResponse()
                     .withHeader("Content-Type", "application/json")
