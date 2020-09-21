@@ -62,6 +62,14 @@ class MeldingDeleOmsorgsdagerUtils {
                   "fødselsdato": "2020-01-01",
                   "aleneOmOmsorgen": true,
                   "utvidetRett": true
+                },
+                {
+                  "identitetsnummer": "07068920285",
+                  "aktørId": null,
+                  "navn": "Barn Barnesen",
+                  "fødselsdato": "2020-01-01",
+                  "aleneOmOmsorgen": true,
+                  "utvidetRett": true
                 }
               ],
               "borINorge": true,
