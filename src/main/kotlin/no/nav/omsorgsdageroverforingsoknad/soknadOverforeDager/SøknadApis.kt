@@ -62,7 +62,6 @@ fun Route.søknadApis(
         logger.info("Oppdatering av barn OK")
 
         logger.info("Validerer melding.")
-        logger.info("---> {}", melding.toString()) //TODO Fjernes ved prodsetting
         melding.valider()
         logger.info("Validering OK. Registrerer melding.")
 

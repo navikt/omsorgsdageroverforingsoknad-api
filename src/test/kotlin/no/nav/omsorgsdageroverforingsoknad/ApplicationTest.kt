@@ -84,8 +84,6 @@ class ApplicationTest {
         }
     }
 
-    //TODO: Flerer tester som sjekker at BARN har fått identitetsnummer
-
     @Test
     fun `test isready, isalive, health og metrics`() {
         with(engine) {
@@ -193,7 +191,7 @@ class ApplicationTest {
 
     @Test
     fun `Hente barn og sjekk at identitetsnummer ikke blir med ved get kall`(){
-        //TODO: Lag en test som eksplisit sjekker at "identitetsnummer" ikke finnes
+
         requestAndAssert(
             httpMethod = HttpMethod.Get,
             path = "/barn",

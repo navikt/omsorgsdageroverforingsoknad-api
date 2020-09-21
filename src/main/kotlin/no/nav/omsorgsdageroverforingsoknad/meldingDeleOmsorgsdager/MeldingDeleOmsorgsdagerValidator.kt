@@ -13,8 +13,6 @@ val MAX_ANTALL_MAN_KAN_HA_DELT_I_ÅR = 999
 internal fun MeldingDeleOmsorgsdager.valider() {
     val violations: MutableSet<Violation> = mutableSetOf<Violation>()
 
-    //TODO: Utvide med mer validering.
-
     if (!harForståttRettigheterOgPlikter) {
         violations.add(
             Violation(

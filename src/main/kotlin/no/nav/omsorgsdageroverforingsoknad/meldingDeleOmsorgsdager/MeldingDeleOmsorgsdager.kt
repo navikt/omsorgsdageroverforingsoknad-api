@@ -32,7 +32,6 @@ data class MeldingDeleOmsorgsdager(
     fun oppdaterBarnUtvidetMedFnr(listeOverBarn: List<Barn>){
         barn.forEach { barn ->
             if(barn.manglerIdentitetsnummer()){
-                logger.info("Oppdaterer fnr på et barn") //TODO FJERN FØR PRODSETTING
                 barn oppdaterIdentitetsnummerMed listeOverBarn.hentIdentitetsnummerForBarn(barn.aktørId)
             }
         }
