@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.omsorgsdageroverforingsoknad.barn.Barn
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.Arbeidssituasjon
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import java.time.LocalDate
 
 
@@ -24,10 +22,6 @@ data class MeldingDeleOmsorgsdager(
     val antallDagerSomSkalOverføres: Int,
     @JsonAlias("antallDagerBruktEtter1Juli")val antallDagerBruktIÅr: Int
     ){
-
-    companion object{
-        private val logger: Logger = LoggerFactory.getLogger(MeldingDeleOmsorgsdager::class.java)
-    }
 
     fun oppdaterBarnUtvidetMedFnr(listeOverBarn: List<Barn>){
         barn.forEach { barn ->
