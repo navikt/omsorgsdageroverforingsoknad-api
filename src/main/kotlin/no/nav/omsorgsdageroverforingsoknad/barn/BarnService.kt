@@ -19,10 +19,7 @@ class BarnService(
         callId: CallId
     ): List<Barn>{
         var listeOverBarn = cache.getIfPresent(idToken.getSubject().toString())
-        if(listeOverBarn != null){
-            logger.info("Fant barn i cache, slipper å slå opp. OBS SKAL IKKE VÆRE MED I PROD") //TODO FJERNE
-            return listeOverBarn
-        }
+        if(listeOverBarn != null) return listeOverBarn
 
         return try {
             val barn = barnGateway.hentBarn(

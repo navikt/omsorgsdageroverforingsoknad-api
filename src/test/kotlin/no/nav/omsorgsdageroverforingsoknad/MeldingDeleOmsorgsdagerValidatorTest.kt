@@ -10,18 +10,17 @@ import java.time.LocalDate
 internal class MeldingDeleOmsorgsdagerValidatorTest {
 
     companion object {
-        private val gyldigFodselsnummerA = "26104500284"
         private val dNummerA = "55125314561"
     }
 
     @Test
-    fun `Skal ikke feile på gyldig søknad`(){
+    fun `Skal ikke feile på gyldig melding`(){
         val melding = meldingDeleOmsorgsdager
         melding.valider()
     }
 
     @Test
-    fun `Skal ikke feile på gyldig søknad med dnummer`(){
+    fun `Skal ikke feile på gyldig melding med dnummer`(){
         val melding = meldingDeleOmsorgsdager.copy(
             mottakerFnr = dNummerA
         )
@@ -92,7 +91,5 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
         )
         melding.valider()
     }
-
-
 
 }

@@ -20,7 +20,7 @@ data class MeldingDeleOmsorgsdager(
     val mottakerFnr: String,
     val mottakerNavn: String,
     val antallDagerSomSkalOverføres: Int,
-    @JsonAlias("antallDagerBruktEtter1Juli")val antallDagerBruktIÅr: Int
+    @JsonAlias("antallDagerBruktEtter1Juli") val antallDagerBruktIÅr: Int
     ){
 
     fun oppdaterBarnUtvidetMedFnr(listeOverBarn: List<Barn>){
