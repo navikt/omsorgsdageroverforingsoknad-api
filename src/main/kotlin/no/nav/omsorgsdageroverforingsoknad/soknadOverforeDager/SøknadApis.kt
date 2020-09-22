@@ -58,7 +58,7 @@ fun Route.søknadApis(
 
         logger.info("Oppdaterer barn med fnr")
         val listeOverBarn = barnService.hentNaaverendeBarn(idTokenProvider.getIdToken(call), call.getCallId())
-        melding.oppdaterBarnUtvidetMedFnr(listeOverBarn)
+        melding.oppdaterBarnMedFnr(listeOverBarn)
         logger.info("Oppdatering av barn OK")
 
         logger.info("Validerer melding.")

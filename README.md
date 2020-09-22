@@ -20,53 +20,45 @@ POST @ /melding/dele-dager som gir 202 Accepted
 
 Validering på felter:
 - harForståttRettigheterOgPlikter og harBekreftetOpplysninger må være satt til true.
-- Kommer mer når dette er avklart....
+- antallDagerSomSkalOverføres må være mellom 1-10
+- mottakerFnr må være gyldig
+- Barn blir sendt inn både med og uten identitetsnummer. Vi slår opp på nytt og
+    populerer de som mangler identitetsnummer. Validering på at identitetsnummer skal være gyldig.
 
 Eksempel på json
 ````json
 {
-                  "språk": "nb",
-                  "harForståttRettigheterOgPlikter": true,
-                  "harBekreftetOpplysninger": true,
-                  "andreBarn": [
-                    {
-                      "fnr": "12345678900",
-                      "ingenFnr": false,
-                      "navn": "Barn Barnesen"
-                    }
-                  ],
-                  "harAleneomsorg": true,
-                  "harAleneomsorgFor": [
-                    {
-                      "fødselsdato": "2010-01-01",
-                      "fornavn": "Fornavn",
-                      "mellomnavn": "Mellomnavn",
-                      "etternavn": "Etternavn",
-                      "aktørId": "12345"
-                    }
-                  ],
-                  "harUtvidetRett": true,
-                  "harUtvidetRettFor": [
-                    {
-                      "fødselsdato": "2010-01-01",
-                      "fornavn": "Fornavn",
-                      "mellomnavn": "Mellomnavn",
-                      "etternavn": "Etternavn",
-                      "aktørId": "12345"
-                    }
-                  ],
-                  "borINorge": true,
-                  "arbeidINorge": true,
-                  "arbeidssituasjon": [
-                    "arbeidstaker"
-                  ],
-                  "antallDagerHarBruktEtter1Juli": 10,
-                  "harDeltDagerMedAndreTidligere": true,
-                  "antallDagerHarDeltMedAndre": 10,
-                  "overføreTilType": "nyEktefelle",
-                  "fnrMottaker": "12345678911",
-                  "navnMottaker": "Navn Mottaker",
-                  "antallDagerTilOverføre": 5,
-                  "harBekreftetMottakerOpplysninger": true
-                }
+  "språk": "nb",
+  "id": "1",
+  "harForståttRettigheterOgPlikter": true,
+  "harBekreftetOpplysninger": true,
+  "barn": [
+    {
+      "identitetsnummer": null,
+      "aktørId": "1000000000001",
+      "navn": "Barn Barnesen",
+      "fødselsdato": "2020-01-01",
+      "aleneOmOmsorgen": true,
+      "utvidetRett": true
+    },
+    {
+      "identitetsnummer": "07068920285",
+      "aktørId": null,
+      "navn": "Barn Barnesen",
+      "fødselsdato": "2020-01-01",
+      "aleneOmOmsorgen": true,
+      "utvidetRett": true
+    }
+  ],
+  "borINorge": true,
+  "arbeidINorge": true,
+  "arbeidssituasjon": [
+    "arbeidstaker"
+  ],
+  "antallDagerBruktEtter1Juli": 10,
+  "mottakerType": "ektefelle",
+  "mottakerFnr": "07068920285",
+  "mottakerNavn": "Navn Mottaker",
+  "antallDagerSomSkalOverføres": 5
+}
 ````

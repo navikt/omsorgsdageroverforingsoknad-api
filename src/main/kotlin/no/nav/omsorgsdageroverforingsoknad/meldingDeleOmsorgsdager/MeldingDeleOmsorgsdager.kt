@@ -23,7 +23,7 @@ data class MeldingDeleOmsorgsdager(
     @JsonAlias("antallDagerBruktEtter1Juli") val antallDagerBruktIÅr: Int
     ){
 
-    fun oppdaterBarnUtvidetMedFnr(listeOverBarn: List<Barn>){
+    fun oppdaterBarnMedFnr(listeOverBarn: List<Barn>){
         barn.forEach { barn ->
             if(barn.manglerIdentitetsnummer()){
                 barn oppdaterIdentitetsnummerMed listeOverBarn.hentIdentitetsnummerForBarn(barn.aktørId)
