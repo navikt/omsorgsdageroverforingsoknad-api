@@ -1,13 +1,16 @@
 package no.nav.omsorgsdageroverforingsoknad
 
-import io.ktor.config.ApplicationConfig
-import io.ktor.util.KtorExperimentalAPI
+import com.github.benmanes.caffeine.cache.Cache
+import com.github.benmanes.caffeine.cache.Caffeine
+import io.ktor.config.*
+import io.ktor.util.*
 import no.nav.helse.dusseldorf.ktor.core.getOptionalList
 import no.nav.helse.dusseldorf.ktor.core.getOptionalString
 import no.nav.helse.dusseldorf.ktor.core.getRequiredList
 import no.nav.helse.dusseldorf.ktor.core.getRequiredString
 import no.nav.omsorgsdageroverforingsoknad.general.auth.ApiGatewayApiKey
 import java.net.URI
+import java.time.Duration
 
 @KtorExperimentalAPI
 data class Configuration(val config : ApplicationConfig) {
@@ -49,5 +52,15 @@ data class Configuration(val config : ApplicationConfig) {
 
     internal fun getStoragePassphrase() : String {
         return config.getRequiredString("nav.storage.passphrase", secret = true)
+    }
+
+    internal fun<K, V>cache(
+        expiry: Duration = Duration.ofMinutes(config.getRequiredString("nav.cache.expiry_in_minutes", secret = false).toLong())
+    ) : Cache<K, V> {
+        val maxSize = config.getRequiredString("nav.cache.max_size", secret = false).toLong()
+        return Caffeine.newBuilder()
+            .expireAfterWrite(expiry)
+            .maximumSize(maxSize)
+            .build()
     }
 }

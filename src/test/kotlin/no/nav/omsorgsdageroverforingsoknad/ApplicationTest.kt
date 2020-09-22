@@ -158,7 +158,7 @@ class ApplicationTest {
                 "barn": []
             }
             """.trimIndent(),
-            cookie = getAuthCookie(fnr)
+            cookie = getAuthCookie(gyldigFodselsnummerA)
         )
         wireMockServer.stubK9OppslagBarn()
     }

@@ -149,7 +149,8 @@ fun Application.omsorgsdageroverforingsoknadapi() {
         )
 
         val barnService = BarnService(
-            barnGateway = barnGateway
+            barnGateway = barnGateway,
+            cache = configuration.cache(expiry = Duration.ofMinutes(30))
         )
 
         val søkerService = SøkerService(
