@@ -13,6 +13,7 @@ import no.nav.omsorgsdageroverforingsoknad.redis.RedisMockUtil
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.MAX_ANTALL_DAGER_MAN_KAN_OVERFØRE
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.MIN_ANTALL_DAGER_MAN_KAN_OVERFØRE
 import no.nav.omsorgsdageroverforingsoknad.wiremock.*
+import org.json.JSONObject
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.skyscreamer.jsonassert.JSONAssert
@@ -22,6 +23,7 @@ import java.time.Duration
 import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 
 private const val fnr = "290990123456"
@@ -190,9 +192,9 @@ class ApplicationTest {
     }
 
     @Test
-    fun `Hente barn og sjekk at identitetsnummer ikke blir med ved get kall`(){
+    fun `Hente barn og sjekk eksplisit at identitetsnummer ikke blir med ved get kall`(){
 
-        requestAndAssert(
+        val respons = requestAndAssert(
             httpMethod = HttpMethod.Get,
             path = "/barn",
             expectedCode = HttpStatusCode.OK,
@@ -218,6 +220,11 @@ class ApplicationTest {
                 }
             """.trimIndent()
         )
+
+        val responsSomJSONArray = JSONObject(respons).getJSONArray("barn")
+
+        assertFalse(responsSomJSONArray.getJSONObject(0).has("identitetsnummer"))
+        assertFalse(responsSomJSONArray.getJSONObject(1).has("identitetsnummer"))
     }
 
     @Test
@@ -719,7 +726,8 @@ class ApplicationTest {
         expectedCode: HttpStatusCode,
         leggTilCookie: Boolean = true,
         cookie: Cookie = getAuthCookie(fnr)
-    ) {
+    ): String? {
+       val respons: String?
         with(engine) {
             handleRequest(httpMethod, path) {
                 if (leggTilCookie) addHeader(HttpHeaders.Cookie, cookie.toString())
@@ -730,6 +738,7 @@ class ApplicationTest {
             }.apply {
                 logger.info("Response Entity = ${response.content}")
                 logger.info("Expected Entity = $expectedResponse")
+                respons = response.content
                 assertEquals(expectedCode, response.status())
                 if (expectedResponse != null) {
                     JSONAssert.assertEquals(expectedResponse, response.content!!, true)
@@ -738,5 +747,6 @@ class ApplicationTest {
                 }
             }
         }
+       return respons
     }
 }
