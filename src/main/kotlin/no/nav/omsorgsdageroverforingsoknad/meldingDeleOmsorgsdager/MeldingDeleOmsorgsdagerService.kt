@@ -23,10 +23,10 @@ class MeldingDeleOmsorgsdagerService(
         idToken: IdToken,
         callId: CallId
     ){
-        logger.info("Registrerer melding for deling av omsorgsdager. Henter søker")
+        logger.trace("Registrerer melding for deling av omsorgsdager. Henter søker")
         val søker: Søker = søkerService.getSoker(idToken = idToken, callId = callId)
 
-        logger.info("Søker hentet. Validerer søker.")
+        logger.trace("Søker hentet. Validerer søker.")
         søker.validate()
 
         logger.info("Legger melding om deling av omsorgsdager til prosessering")

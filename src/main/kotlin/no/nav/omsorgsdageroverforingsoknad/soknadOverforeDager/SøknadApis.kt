@@ -56,12 +56,12 @@ fun Route.søknadApis(
         val melding = call.receive<MeldingDeleOmsorgsdager>()
         logger.trace("Søknad mappet.")
 
-        logger.info("Oppdaterer barn med fnr")
+        logger.trace("Oppdaterer barn med fnr")
         val listeOverBarn = barnService.hentNaaverendeBarn(idTokenProvider.getIdToken(call), call.getCallId())
         melding.oppdaterBarnMedFnr(listeOverBarn)
-        logger.info("Oppdatering av barn OK")
+        logger.info("Oppdatering av fnr på barn OK")
 
-        logger.info("Validerer melding.")
+        logger.trace("Validerer melding.")
         melding.valider()
         logger.info("Validering OK. Registrerer melding.")
 
