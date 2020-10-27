@@ -7,7 +7,7 @@ val mainClass = "no.nav.omsorgsdageroverforingsoknad.AppKt"
 
 plugins {
     kotlin("jvm") version "1.3.50"
-    id("com.github.johnrengelman.shadow") version "5.1.0"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
 buildscript {
@@ -17,26 +17,26 @@ buildscript {
 
 dependencies {
     // Server
-    compile ( "no.nav.helse:dusseldorf-ktor-core:$dusseldorfKtorVersion")
-    compile ( "no.nav.helse:dusseldorf-ktor-jackson:$dusseldorfKtorVersion")
-    compile ( "no.nav.helse:dusseldorf-ktor-metrics:$dusseldorfKtorVersion")
-    compile ( "no.nav.helse:dusseldorf-ktor-health:$dusseldorfKtorVersion")
-    compile ( "no.nav.helse:dusseldorf-ktor-auth:$dusseldorfKtorVersion")
-    compile("io.ktor:ktor-locations:$ktorVersion")
+    implementation ( "no.nav.helse:dusseldorf-ktor-core:$dusseldorfKtorVersion")
+    implementation ( "no.nav.helse:dusseldorf-ktor-jackson:$dusseldorfKtorVersion")
+    implementation ( "no.nav.helse:dusseldorf-ktor-metrics:$dusseldorfKtorVersion")
+    implementation ( "no.nav.helse:dusseldorf-ktor-health:$dusseldorfKtorVersion")
+    implementation ( "no.nav.helse:dusseldorf-ktor-auth:$dusseldorfKtorVersion")
+    implementation("io.ktor:ktor-locations:$ktorVersion")
 
     // Client
-    compile ( "no.nav.helse:dusseldorf-ktor-client:$dusseldorfKtorVersion")
-    compile ( "no.nav.helse:dusseldorf-oauth2-client:$dusseldorfKtorVersion")
-    compile ("io.lettuce:lettuce-core:5.2.1.RELEASE")
+    implementation ( "no.nav.helse:dusseldorf-ktor-client:$dusseldorfKtorVersion")
+    implementation ( "no.nav.helse:dusseldorf-oauth2-client:$dusseldorfKtorVersion")
+    implementation ("io.lettuce:lettuce-core:5.2.1.RELEASE")
     implementation("com.github.fppt:jedis-mock:0.1.16")
 
     // Test
-    testCompile("no.nav.helse:dusseldorf-test-support:$dusseldorfKtorVersion")
-    testCompile("io.ktor:ktor-server-test-host:$ktorVersion") {
+    testImplementation("no.nav.helse:dusseldorf-test-support:$dusseldorfKtorVersion")
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") {
         exclude(group = "org.eclipse.jetty")
     }
 
-    testCompile ("org.skyscreamer:jsonassert:1.5.0")
+    testImplementation ("org.skyscreamer:jsonassert:1.5.0")
 }
 
 repositories {
@@ -86,5 +86,5 @@ tasks.withType<ShadowJar> {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "5.6.2"
+    gradleVersion = "6.7"
 }
