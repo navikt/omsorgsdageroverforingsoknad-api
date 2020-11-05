@@ -3,8 +3,11 @@ package no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.omsorgsdageroverforingsoknad.barn.Barn
+import no.nav.omsorgsdageroverforingsoknad.soker.Søker
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.Arbeidssituasjon
 import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 
 
 data class MeldingDeleOmsorgsdager(
@@ -29,6 +32,26 @@ data class MeldingDeleOmsorgsdager(
                 barn oppdaterIdentitetsnummerMed listeOverBarn.hentIdentitetsnummerForBarn(barn.aktørId)
             }
         }
+    }
+
+    fun tilKomplettMelding(søker: Søker): KomplettMeldingDeleOmsorgsdager{
+        return KomplettMeldingDeleOmsorgsdager(
+            mottatt = ZonedDateTime.now(ZoneOffset.UTC),
+            søker = søker,
+            språk = språk,
+            id = id,
+            harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
+            harBekreftetOpplysninger = harBekreftetOpplysninger,
+            barn = barn,
+            borINorge = borINorge,
+            arbeiderINorge = arbeiderINorge,
+            arbeidssituasjon = arbeidssituasjon,
+            antallDagerBruktIÅr = antallDagerBruktIÅr,
+            mottakerType = mottakerType,
+            mottakerFnr = mottakerFnr,
+            mottakerNavn = mottakerNavn,
+            antallDagerSomSkalOverføres = antallDagerSomSkalOverføres
+        )
     }
 
 }

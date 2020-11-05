@@ -7,8 +7,6 @@ import no.nav.omsorgsdageroverforingsoknad.soker.SøkerService
 import no.nav.omsorgsdageroverforingsoknad.soker.validate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
 
 class MeldingDeleOmsorgsdagerService(
     private val meldingDeleOmsorgsdagerMottakGateway: MeldingDeleOmsorgsdagerMottakGateway,
@@ -31,23 +29,7 @@ class MeldingDeleOmsorgsdagerService(
 
         logger.info("Legger melding om deling av omsorgsdager til prosessering")
 
-        val komplettMeldingDeleOmsorgsdager = KomplettMeldingDeleOmsorgsdager(
-            mottatt = ZonedDateTime.now(ZoneOffset.UTC),
-            søker = søker,
-            språk = melding.språk,
-            id = melding.id,
-            harForståttRettigheterOgPlikter = melding.harForståttRettigheterOgPlikter,
-            harBekreftetOpplysninger = melding.harBekreftetOpplysninger,
-            barn = melding.barn,
-            borINorge = melding.borINorge,
-            arbeiderINorge = melding.arbeiderINorge,
-            arbeidssituasjon = melding.arbeidssituasjon,
-            antallDagerBruktIÅr = melding.antallDagerBruktIÅr,
-            mottakerType = melding.mottakerType,
-            mottakerFnr = melding.mottakerFnr,
-            mottakerNavn = melding.mottakerNavn,
-            antallDagerSomSkalOverføres = melding.antallDagerSomSkalOverføres
-        )
+        val komplettMeldingDeleOmsorgsdager = melding.tilKomplettMelding(søker)
 
         meldingDeleOmsorgsdagerMottakGateway.leggTilProsesseringDeleOmsorgsdager(
             soknad = komplettMeldingDeleOmsorgsdager,
