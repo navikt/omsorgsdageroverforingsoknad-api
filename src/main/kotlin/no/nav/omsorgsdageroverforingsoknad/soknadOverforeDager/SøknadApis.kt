@@ -52,13 +52,15 @@ fun Route.søknadApis(
     class sendMeldingDeleOmsorgsdager
 
     post { _ : sendMeldingDeleOmsorgsdager ->
-        logger.info("Mottatt ny melding for deling av omsorgsdager. Mapper melding.")
+        logger.info("Mottatt ny melding for deling av omsorgsdager.")
+
+        logger.trace("Mapper melding.")
         val melding = call.receive<MeldingDeleOmsorgsdager>()
-        logger.trace("Søknad mappet.")
+        logger.trace("Melding mappet.")
 
         logger.trace("Oppdaterer barn med fnr")
-        val listeOverBarn = barnService.hentNaaverendeBarn(idTokenProvider.getIdToken(call), call.getCallId())
-        melding.oppdaterBarnMedFnr(listeOverBarn)
+        val listeOverBarnMedFnr = barnService.hentNaaverendeBarn(idTokenProvider.getIdToken(call), call.getCallId())
+        melding.oppdaterBarnMedFnr(listeOverBarnMedFnr)
         logger.info("Oppdatering av fnr på barn OK")
 
         logger.trace("Validerer melding.")

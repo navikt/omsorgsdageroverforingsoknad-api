@@ -9,7 +9,6 @@ import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
-
 data class MeldingDeleOmsorgsdager(
     val id: String,
     val språk: String,
@@ -23,7 +22,7 @@ data class MeldingDeleOmsorgsdager(
     val mottakerFnr: String,
     val mottakerNavn: String,
     val antallDagerSomSkalOverføres: Int,
-    @JsonAlias("antallDagerBruktEtter1Juli") val antallDagerBruktIÅr: Int
+    @JsonAlias("antallDagerBruktEtter1Juli") val antallDagerBruktIÅr: Int //Frontend burde oppdateres etter 2020 og alias fjernes.
     ){
 
     fun oppdaterBarnMedFnr(listeOverBarn: List<Barn>){
