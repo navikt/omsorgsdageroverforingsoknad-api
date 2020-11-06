@@ -24,6 +24,7 @@ Validering på felter:
 - mottakerFnr må være gyldig
 - Barn blir sendt inn både med og uten identitetsnummer. Vi slår opp på nytt og
     populerer de som mangler identitetsnummer. Validering på at identitetsnummer skal være gyldig.
+- Alle bolske verdier blir satt til null slik at vi unngår default false. Vi validerer at de har blitt satt til true eller false
 
 Eksempel på json
 ````json
