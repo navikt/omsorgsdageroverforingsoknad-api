@@ -11,9 +11,8 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
 
     companion object {
         private val dNummerA = "55125314561"
+        private val gyldigFødselsnummer = "07068920285"
     }
-
-    //TODO Tester som sjekker at det gir feil dersom boolske verdier blir satt til null
 
     @Test
     fun `Skal ikke feile på gyldig melding`(){
@@ -38,9 +37,25 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
     }
 
     @Test(expected = Throwblem::class)
+    fun `Skal feile dersom harBekreftetOpplysninger er null`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            harBekreftetOpplysninger = null
+        )
+        melding.valider()
+    }
+
+    @Test(expected = Throwblem::class)
     fun `Skal feile dersom harForståttRettigheterOgPlikter er false`(){
         val melding = meldingDeleOmsorgsdager.copy(
             harForståttRettigheterOgPlikter = false
+        )
+        melding.valider()
+    }
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom harForståttRettigheterOgPlikter er null`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            harForståttRettigheterOgPlikter = null
         )
         melding.valider()
     }
@@ -90,6 +105,56 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
                     utvidetRett = false
                 )
             )
+        )
+        melding.valider()
+    }
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom barnUtvidet utvidetRett er null`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            barn = listOf(
+                BarnUtvidet(
+                    identitetsnummer = gyldigFødselsnummer,
+                    aktørId = "123",
+                    fødselsdato = LocalDate.now(),
+                    navn = "Barn Barnesen",
+                    aleneOmOmsorgen = true,
+                    utvidetRett = null
+                )
+            )
+        )
+        melding.valider()
+    }
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom barnUtvidet aleneOmOmsorgen er null`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            barn = listOf(
+                BarnUtvidet(
+                    identitetsnummer = gyldigFødselsnummer,
+                    aktørId = "123",
+                    fødselsdato = LocalDate.now(),
+                    navn = "Barn Barnesen",
+                    aleneOmOmsorgen = null,
+                    utvidetRett = true
+                )
+            )
+        )
+        melding.valider()
+    }
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom arbeiderINorge er null`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            arbeiderINorge = null
+        )
+        melding.valider()
+    }
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom borINorge er null`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            borINorge = null
         )
         melding.valider()
     }

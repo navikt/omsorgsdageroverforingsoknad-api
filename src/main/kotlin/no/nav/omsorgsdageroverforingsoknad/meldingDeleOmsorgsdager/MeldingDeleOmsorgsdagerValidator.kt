@@ -95,6 +95,10 @@ private fun List<BarnUtvidet>.valider(): MutableSet<Violation> {
     val violations: MutableSet<Violation> = mutableSetOf<Violation>()
 
     forEachIndexed { index, barnUtvidet ->
+
+        violations.addAll(nullSjekk(barnUtvidet.aleneOmOmsorgen, "aleneOmOmsorgen"))
+        violations.addAll(nullSjekk(barnUtvidet.utvidetRett, "utvidetRett"))
+
         if(barnUtvidet.identitetsnummer.isNullOrEmpty()){
             violations.add(
                 Violation(

@@ -73,8 +73,8 @@ data class BarnUtvidet(
     val aktørId: String?,
     val fødselsdato: LocalDate,
     val navn: String,
-    val aleneOmOmsorgen: Boolean, //TODO Null
-    val utvidetRett: Boolean
+    val aleneOmOmsorgen: Boolean? = null, //Settes til null for å unngå default false
+    val utvidetRett: Boolean ? = null //Settes til null for å unngå default false,
 ){
     fun manglerIdentitetsnummer(): Boolean = identitetsnummer.isNullOrEmpty()
 
