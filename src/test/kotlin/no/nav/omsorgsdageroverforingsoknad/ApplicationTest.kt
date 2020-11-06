@@ -675,7 +675,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `Sende melding hvor barn har ugydlig identitetsnummer`(){
+    fun `Sende melding hvor barn har ugyldig identitetsnummer`(){
         val cookie = getAuthCookie(fnr)
 
         requestAndAssert(

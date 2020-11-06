@@ -13,7 +13,7 @@ val MAX_ANTALL_MAN_KAN_HA_DELT_I_ÅR = 999
 internal fun MeldingDeleOmsorgsdager.valider() {
     val mangler: MutableSet<Violation> = mutableSetOf<Violation>()
 
-    if (harBekreftetOpplysninger er false) {
+    if(harBekreftetOpplysninger er false) {
         mangler.add(
             Violation(
                 parameterName = "harBekreftetOpplysninger",
@@ -24,7 +24,7 @@ internal fun MeldingDeleOmsorgsdager.valider() {
         )
     }
 
-    if (harForståttRettigheterOgPlikter er false) {
+    if(harForståttRettigheterOgPlikter er false) {
         mangler.add(
             Violation(
                 parameterName = "harForståttRettigheterOgPlikter",
@@ -92,15 +92,15 @@ internal fun MeldingDeleOmsorgsdager.valider() {
 }
 
 private fun List<BarnUtvidet>.valider(): MutableSet<Violation> {
-    val violations: MutableSet<Violation> = mutableSetOf<Violation>()
+    val mangler: MutableSet<Violation> = mutableSetOf<Violation>()
 
     forEachIndexed { index, barnUtvidet ->
 
-        violations.addAll(nullSjekk(barnUtvidet.aleneOmOmsorgen, "aleneOmOmsorgen"))
-        violations.addAll(nullSjekk(barnUtvidet.utvidetRett, "utvidetRett"))
+        mangler.addAll(nullSjekk(barnUtvidet.aleneOmOmsorgen, "aleneOmOmsorgen"))
+        mangler.addAll(nullSjekk(barnUtvidet.utvidetRett, "utvidetRett"))
 
         if(barnUtvidet.identitetsnummer.isNullOrEmpty()){
-            violations.add(
+            mangler.add(
                 Violation(
                     parameterName = "barn[$index].identitetsnummer",
                     parameterType = ParameterType.ENTITY,
@@ -112,7 +112,7 @@ private fun List<BarnUtvidet>.valider(): MutableSet<Violation> {
 
         if(barnUtvidet.identitetsnummer != null){
             if(!barnUtvidet.identitetsnummer!!.erGyldigNorskIdentifikator()){
-                violations.add(
+                mangler.add(
                     Violation(
                         parameterName = "barn[$index].identitetsnummer",
                         parameterType = ParameterType.ENTITY,
@@ -124,14 +124,14 @@ private fun List<BarnUtvidet>.valider(): MutableSet<Violation> {
         }
     }
 
-    return violations
+    return mangler
 }
 
 private fun nullSjekk(verdi: Boolean?, navn: String): MutableSet<Violation>{
-    val violations: MutableSet<Violation> = mutableSetOf<Violation>()
+    val mangler: MutableSet<Violation> = mutableSetOf<Violation>()
 
     if(verdi er null){
-        violations.add(
+        mangler.add(
             Violation(
                 parameterName = navn,
                 parameterType = ParameterType.ENTITY,
@@ -141,7 +141,7 @@ private fun nullSjekk(verdi: Boolean?, navn: String): MutableSet<Violation>{
         )
     }
 
-    return violations
+    return mangler
 }
 
 private infix fun Boolean?.er(forventetVerdi: Boolean?): Boolean = this == forventetVerdi

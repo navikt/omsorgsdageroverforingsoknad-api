@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.omsorgsdageroverforingsoknad.barn.Barn
 import no.nav.omsorgsdageroverforingsoknad.soker.Søker
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.Arbeidssituasjon
-import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
@@ -56,29 +55,14 @@ data class MeldingDeleOmsorgsdager(
 
 }
 
-private fun List<Barn>.hentIdentitetsnummerForBarn(aktørId: String?): String?{
-    this.forEach {
-        if(it.aktørId == aktørId) return it.identitetsnummer
-    }
-    return null
-}
-
 enum class Mottaker() {
     @JsonProperty("ektefelle") EKTEFELLE,
     @JsonProperty("samboer") SAMBOER
 }
 
-data class BarnUtvidet(
-    var identitetsnummer: String?,
-    val aktørId: String?,
-    val fødselsdato: LocalDate,
-    val navn: String,
-    val aleneOmOmsorgen: Boolean? = null, //Settes til null for å unngå default false
-    val utvidetRett: Boolean ? = null //Settes til null for å unngå default false,
-){
-    fun manglerIdentitetsnummer(): Boolean = identitetsnummer.isNullOrEmpty()
-
-    infix fun oppdaterIdentitetsnummerMed(identitetsnummer: String?){
-        this.identitetsnummer = identitetsnummer
+private fun List<Barn>.hentIdentitetsnummerForBarn(aktørId: String?): String?{
+    this.forEach {
+        if(it.aktørId == aktørId) return it.identitetsnummer
     }
+    return null
 }
