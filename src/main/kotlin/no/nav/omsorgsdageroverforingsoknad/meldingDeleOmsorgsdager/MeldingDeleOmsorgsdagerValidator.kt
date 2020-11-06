@@ -11,21 +11,10 @@ val MIN_ANTALL_DAGER_MAN_KAN_DELE = 1
 val MAX_ANTALL_MAN_KAN_HA_DELT_I_ÅR = 999
 
 internal fun MeldingDeleOmsorgsdager.valider() {
-    val violations: MutableSet<Violation> = mutableSetOf<Violation>()
+    val mangler: MutableSet<Violation> = mutableSetOf<Violation>()
 
-    if (!harForståttRettigheterOgPlikter) {
-        violations.add(
-            Violation(
-                parameterName = "harForståttRettigheterOgPlikter",
-                parameterType = ParameterType.ENTITY,
-                reason = "Må ha forstått rettigheter og plikter for å sende inn søknad.",
-                invalidValue = harForståttRettigheterOgPlikter
-            )
-        )
-    }
-
-    if (!harBekreftetOpplysninger) {
-        violations.add(
+    if (harBekreftetOpplysninger er false) {
+        mangler.add(
             Violation(
                 parameterName = "harBekreftetOpplysninger",
                 parameterType = ParameterType.ENTITY,
@@ -35,9 +24,19 @@ internal fun MeldingDeleOmsorgsdager.valider() {
         )
     }
 
+    if (harForståttRettigheterOgPlikter er false) {
+        mangler.add(
+            Violation(
+                parameterName = "harForståttRettigheterOgPlikter",
+                parameterType = ParameterType.ENTITY,
+                reason = "Må ha forstått rettigheter og plikter for å sende inn søknad.",
+                invalidValue = harForståttRettigheterOgPlikter
+            )
+        )
+    }
 
     if(antallDagerBruktIÅr !in 0..MAX_ANTALL_MAN_KAN_HA_DELT_I_ÅR){
-        violations.add(
+        mangler.add(
             Violation(
                 parameterName = "antallDagerBruktIÅr",
                 parameterType = ParameterType.ENTITY,
@@ -48,7 +47,7 @@ internal fun MeldingDeleOmsorgsdager.valider() {
     }
 
     if(!mottakerFnr.erGyldigNorskIdentifikator()){
-        violations.add(
+        mangler.add(
             Violation(
                 parameterName = "fnrMottaker",
                 parameterType = ParameterType.ENTITY,
@@ -59,7 +58,7 @@ internal fun MeldingDeleOmsorgsdager.valider() {
     }
 
     if(mottakerNavn.isBlank()){
-        violations.add(
+        mangler.add(
             Violation(
                 parameterName = "mottakerNavn",
                 parameterType = ParameterType.ENTITY,
@@ -70,7 +69,7 @@ internal fun MeldingDeleOmsorgsdager.valider() {
     }
 
     if(antallDagerSomSkalOverføres !in MIN_ANTALL_DAGER_MAN_KAN_DELE..MAX_ANTALL_DAGER_MAN_KAN_DELE){
-        violations.add(
+        mangler.add(
             Violation(
                 parameterName = "antallDagerTilOverføre",
                 parameterType = ParameterType.ENTITY,
@@ -80,10 +79,15 @@ internal fun MeldingDeleOmsorgsdager.valider() {
         )
     }
 
-    violations.addAll(barn.valider())
+    mangler.addAll(barn.valider())
 
-    if (violations.isNotEmpty()) {
-        throw Throwblem(ValidationProblemDetails(violations))
+    mangler.addAll(nullSjekk(harBekreftetOpplysninger, "harBekreftetOpplysninger"))
+    mangler.addAll(nullSjekk(harForståttRettigheterOgPlikter, "harForståttRettigheterOgPlikter"))
+    mangler.addAll(nullSjekk(borINorge, "borINorge"))
+    mangler.addAll(nullSjekk(arbeiderINorge, "arbeiderINorge"))
+
+    if (mangler.isNotEmpty()) {
+        throw Throwblem(ValidationProblemDetails(mangler))
     }
 }
 
@@ -118,3 +122,22 @@ private fun List<BarnUtvidet>.valider(): MutableSet<Violation> {
 
     return violations
 }
+
+private fun nullSjekk(verdi: Boolean?, navn: String): MutableSet<Violation>{
+    val violations: MutableSet<Violation> = mutableSetOf<Violation>()
+
+    if(verdi er null){
+        violations.add(
+            Violation(
+                parameterName = navn,
+                parameterType = ParameterType.ENTITY,
+                reason = "$navn kan ikke være null",
+                invalidValue = verdi
+            )
+        )
+    }
+
+    return violations
+}
+
+private infix fun Boolean?.er(forventetVerdi: Boolean?): Boolean = this == forventetVerdi

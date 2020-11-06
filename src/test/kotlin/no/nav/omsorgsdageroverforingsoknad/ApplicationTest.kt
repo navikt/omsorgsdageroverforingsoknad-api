@@ -564,27 +564,27 @@ class ApplicationTest {
             path = DELE_DAGER_API_URL,
             //language=JSON
             expectedResponse = """
+                {
+                  "type": "/problem-details/invalid-request-parameters",
+                  "title": "invalid-request-parameters",
+                  "status": 400,
+                  "detail": "Requesten inneholder ugyldige paramtere.",
+                  "instance": "about:blank",
+                  "invalid_parameters": [
                     {
-                      "type": "/problem-details/invalid-request-parameters",
-                      "title": "invalid-request-parameters",
-                      "status": 400,
-                      "detail": "Requesten inneholder ugyldige paramtere.",
-                      "instance": "about:blank",
-                      "invalid_parameters": [
-                      {
-                          "type": "entity",
-                          "name": "harForståttRettigheterOgPlikter",
-                          "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad.",
-                          "invalid_value": false
-                        },
-                        {
-                          "type": "entity",
-                          "name": "harBekreftetOpplysninger",
-                          "reason": "Opplysningene må bekreftes for å sende inn søknad.",
-                          "invalid_value": false
-                        }
-                      ]
+                      "type": "entity",
+                      "name": "harBekreftetOpplysninger",
+                      "reason": "Opplysningene må bekreftes for å sende inn søknad.",
+                      "invalid_value": false
+                    },
+                    {
+                      "type": "entity",
+                      "name": "harForståttRettigheterOgPlikter",
+                      "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad.",
+                      "invalid_value": false
                     }
+                  ]
+                }
             """.trimIndent(),
             expectedCode = HttpStatusCode.BadRequest,
             cookie = cookie,

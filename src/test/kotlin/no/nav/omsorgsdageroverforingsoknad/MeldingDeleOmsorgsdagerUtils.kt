@@ -73,7 +73,7 @@ class MeldingDeleOmsorgsdagerUtils {
                 }
               ],
               "borINorge": true,
-              "arbeidINorge": true,
+              "arbeiderINorge": true,
               "arbeidssituasjon": [
                 "arbeidstaker"
               ],

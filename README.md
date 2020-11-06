@@ -51,7 +51,7 @@ Eksempel på json
     }
   ],
   "borINorge": true,
-  "arbeidINorge": true,
+  "arbeiderINorge": true,
   "arbeidssituasjon": [
     "arbeidstaker"
   ],

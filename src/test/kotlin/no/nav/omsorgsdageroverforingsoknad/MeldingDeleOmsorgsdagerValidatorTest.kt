@@ -13,6 +13,8 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
         private val dNummerA = "55125314561"
     }
 
+    //TODO Tester som sjekker at det gir feil dersom boolske verdier blir satt til null
+
     @Test
     fun `Skal ikke feile på gyldig melding`(){
         val melding = meldingDeleOmsorgsdager

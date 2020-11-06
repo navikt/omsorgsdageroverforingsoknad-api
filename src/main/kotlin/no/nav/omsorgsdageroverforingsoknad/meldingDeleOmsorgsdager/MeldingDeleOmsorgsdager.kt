@@ -12,17 +12,18 @@ import java.time.ZonedDateTime
 data class MeldingDeleOmsorgsdager(
     val id: String,
     val språk: String,
-    val harForståttRettigheterOgPlikter: Boolean,
-    val harBekreftetOpplysninger: Boolean,
+    val harForståttRettigheterOgPlikter: Boolean? = null, //Settes til null for å unngå default false,
+    val harBekreftetOpplysninger: Boolean? = null, //Settes til null for å unngå default false,
+    val borINorge: Boolean? = null, //Settes til null for å unngå default false,
+    val arbeiderINorge: Boolean? = null, //Settes til null for å unngå default false,
     val barn: List<BarnUtvidet>,
-    val borINorge: Boolean,
-    val arbeiderINorge: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
     val mottakerType: Mottaker,
     val mottakerFnr: String,
     val mottakerNavn: String,
     val antallDagerSomSkalOverføres: Int,
-    @JsonAlias("antallDagerBruktEtter1Juli") val antallDagerBruktIÅr: Int //Frontend burde oppdateres etter 2020 og alias fjernes.
+    @JsonAlias("antallDagerBruktEtter1Juli")
+    val antallDagerBruktIÅr: Int //Frontend burde oppdateres etter 2020 og alias fjernes.
     ){
 
     fun oppdaterBarnMedFnr(listeOverBarn: List<Barn>){
@@ -39,11 +40,11 @@ data class MeldingDeleOmsorgsdager(
             søker = søker,
             språk = språk,
             id = id,
-            harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
-            harBekreftetOpplysninger = harBekreftetOpplysninger,
+            harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter!!,
+            harBekreftetOpplysninger = harBekreftetOpplysninger!!,
             barn = barn,
-            borINorge = borINorge,
-            arbeiderINorge = arbeiderINorge,
+            borINorge = borINorge!!,
+            arbeiderINorge = arbeiderINorge!!,
             arbeidssituasjon = arbeidssituasjon,
             antallDagerBruktIÅr = antallDagerBruktIÅr,
             mottakerType = mottakerType,
@@ -72,7 +73,7 @@ data class BarnUtvidet(
     val aktørId: String?,
     val fødselsdato: LocalDate,
     val navn: String,
-    val aleneOmOmsorgen: Boolean,
+    val aleneOmOmsorgen: Boolean, //TODO Null
     val utvidetRett: Boolean
 ){
     fun manglerIdentitetsnummer(): Boolean = identitetsnummer.isNullOrEmpty()
