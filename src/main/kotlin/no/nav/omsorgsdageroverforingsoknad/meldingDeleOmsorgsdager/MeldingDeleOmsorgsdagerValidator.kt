@@ -110,17 +110,16 @@ private fun List<BarnUtvidet>.valider(): MutableSet<Violation> {
             )
         }
 
-        if(barnUtvidet.identitetsnummer != null){
-            if(!barnUtvidet.identitetsnummer!!.erGyldigNorskIdentifikator()){
-                mangler.add(
-                    Violation(
-                        parameterName = "barn[$index].identitetsnummer",
-                        parameterType = ParameterType.ENTITY,
-                        reason = "identitetsnummer er ikke gyldig norsk identifikator",
-                        invalidValue = barnUtvidet.identitetsnummer
-                    )
+        val fødslesnummer = barnUtvidet.identitetsnummer
+        if(fødslesnummer != null && !fødslesnummer.erGyldigNorskIdentifikator()){
+            mangler.add(
+                Violation(
+                    parameterName = "barn[$index].identitetsnummer",
+                    parameterType = ParameterType.ENTITY,
+                    reason = "identitetsnummer er ikke gyldig norsk identifikator",
+                    invalidValue = barnUtvidet.identitetsnummer
                 )
-            }
+            )
         }
     }
 
