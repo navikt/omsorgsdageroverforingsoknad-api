@@ -37,25 +37,9 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
     }
 
     @Test(expected = Throwblem::class)
-    fun `Skal feile dersom harBekreftetOpplysninger er null`(){
-        val melding = meldingDeleOmsorgsdager.copy(
-            harBekreftetOpplysninger = null
-        )
-        melding.valider()
-    }
-
-    @Test(expected = Throwblem::class)
     fun `Skal feile dersom harForståttRettigheterOgPlikter er false`(){
         val melding = meldingDeleOmsorgsdager.copy(
             harForståttRettigheterOgPlikter = false
-        )
-        melding.valider()
-    }
-
-    @Test(expected = Throwblem::class)
-    fun `Skal feile dersom harForståttRettigheterOgPlikter er null`(){
-        val melding = meldingDeleOmsorgsdager.copy(
-            harForståttRettigheterOgPlikter = null
         )
         melding.valider()
     }

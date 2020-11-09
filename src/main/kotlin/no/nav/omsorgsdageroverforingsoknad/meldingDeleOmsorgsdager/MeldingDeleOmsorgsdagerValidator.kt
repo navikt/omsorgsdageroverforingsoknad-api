@@ -8,7 +8,7 @@ import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.erGyldigNorskIden
 
 val MAX_ANTALL_DAGER_MAN_KAN_DELE = 10
 val MIN_ANTALL_DAGER_MAN_KAN_DELE = 1
-val MAX_ANTALL_MAN_KAN_HA_DELT_I_ÅR = 999 //TODO Sjekk opp om det er noen øvre grense
+val MAX_ANTALL_DAGER_MAN_KAN_HA_DELT_I_ÅR = 999
 
 internal fun MeldingDeleOmsorgsdager.valider() {
     val mangler: MutableSet<Violation> = mutableSetOf<Violation>()
@@ -35,12 +35,12 @@ internal fun MeldingDeleOmsorgsdager.valider() {
         )
     }
 
-    if(antallDagerBruktIÅr !in 0..MAX_ANTALL_MAN_KAN_HA_DELT_I_ÅR){
+    if(antallDagerBruktIÅr !in 0..MAX_ANTALL_DAGER_MAN_KAN_HA_DELT_I_ÅR){
         mangler.add(
             Violation(
                 parameterName = "antallDagerBruktIÅr",
                 parameterType = ParameterType.ENTITY,
-                reason = "antallDagerBruktIÅr må være mellom 0 og $MAX_ANTALL_MAN_KAN_HA_DELT_I_ÅR",
+                reason = "antallDagerBruktIÅr må være mellom 0 og $MAX_ANTALL_DAGER_MAN_KAN_HA_DELT_I_ÅR",
                 invalidValue = antallDagerBruktIÅr
             )
         )
@@ -80,9 +80,6 @@ internal fun MeldingDeleOmsorgsdager.valider() {
     }
 
     mangler.addAll(barn.valider())
-
-    mangler.addAll(nullSjekk(harBekreftetOpplysninger, "harBekreftetOpplysninger"))
-    mangler.addAll(nullSjekk(harForståttRettigheterOgPlikter, "harForståttRettigheterOgPlikter"))
     mangler.addAll(nullSjekk(borINorge, "borINorge"))
     mangler.addAll(nullSjekk(arbeiderINorge, "arbeiderINorge"))
 
