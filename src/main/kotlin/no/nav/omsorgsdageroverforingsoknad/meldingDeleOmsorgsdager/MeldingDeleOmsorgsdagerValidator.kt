@@ -110,8 +110,8 @@ private fun List<BarnUtvidet>.valider(): MutableSet<Violation> {
             )
         }
 
-        val fødslesnummer = barnUtvidet.identitetsnummer
-        if(fødslesnummer != null && !fødslesnummer.erGyldigNorskIdentifikator()){
+        val identitetsnummer = barnUtvidet.identitetsnummer
+        if(identitetsnummer != null && !identitetsnummer.erGyldigNorskIdentifikator()){
             mangler.add(
                 Violation(
                     parameterName = "barn[$index].identitetsnummer",
