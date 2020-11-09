@@ -4,8 +4,6 @@ import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
 import io.ktor.config.*
 import io.ktor.util.*
-import io.ktor.config.*
-import io.ktor.util.*
 import no.nav.helse.dusseldorf.ktor.auth.EnforceEqualsOrContains
 import no.nav.helse.dusseldorf.ktor.auth.issuers
 import no.nav.helse.dusseldorf.ktor.auth.withAdditionalClaimRules
@@ -42,6 +40,8 @@ data class Configuration(val config : ApplicationConfig) {
             secret = false
         )
     }
+
+    internal fun getBarnCacheExpiryInMinutes() = config.getRequiredString("nav.cache.barn.cache_expiry_in_minutes", secret = false)
 
     internal fun getK9OppslagUrl() = URI(config.getRequiredString("nav.gateways.k9_oppslag_url", secret = false))
 

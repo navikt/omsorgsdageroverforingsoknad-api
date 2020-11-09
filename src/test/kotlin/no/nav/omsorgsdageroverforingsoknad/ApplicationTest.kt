@@ -551,7 +551,7 @@ class ApplicationTest {
             expectedResponse = null,
             expectedCode = HttpStatusCode.Accepted,
             cookie = cookie,
-            requestEntity = MeldingDeleOmsorgsdagerUtils.fullBody()
+            requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.somJson()
         )
     }
 
@@ -613,7 +613,7 @@ class ApplicationTest {
             """.trimIndent(),
             expectedCode = HttpStatusCode.Forbidden,
             cookie = cookie,
-            requestEntity = MeldingDeleOmsorgsdagerUtils.fullBody()
+            requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.somJson()
         )
     }
 

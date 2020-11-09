@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.*
 import io.ktor.auth.*
-import io.ktor.auth.jwt.*
-import io.ktor.auth.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.jackson.*
@@ -141,7 +139,7 @@ fun Application.omsorgsdageroverforingsoknadapi() {
 
         val barnService = BarnService(
             barnGateway = barnGateway,
-            cache = configuration.cache(expiry = Duration.ofMinutes(30))
+            cache = configuration.cache()
         )
 
         val søkerService = SøkerService(
