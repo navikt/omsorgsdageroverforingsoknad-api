@@ -1,12 +1,9 @@
 package no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
-import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpPost
-import io.ktor.http.HttpHeaders
-import io.ktor.http.Url
+import io.ktor.http.*
 import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.helse.dusseldorf.ktor.health.HealthCheck
 import no.nav.helse.dusseldorf.ktor.health.Healthy
@@ -33,8 +30,6 @@ class MeldingDeleOmsorgsdagerMottakGateway(
     private companion object {
         private val logger: Logger = LoggerFactory.getLogger(MeldingDeleOmsorgsdagerMottakGateway::class.java)
         private val objectMapper = jacksonObjectMapper().dusseldorfConfigured()
-            .setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
-            .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
     }
 
     private val komplettUrlDeleDager = Url.buildURL(
