@@ -8,7 +8,7 @@ import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.erGyldigNorskIden
 
 val MAX_ANTALL_DAGER_MAN_KAN_DELE = 10
 val MIN_ANTALL_DAGER_MAN_KAN_DELE = 1
-val MAX_ANTALL_MAN_KAN_HA_DELT_I_ÅR = 999
+val MAX_ANTALL_MAN_KAN_HA_DELT_I_ÅR = 999 //TODO Sjekk opp om det er noen øvre grense
 
 internal fun MeldingDeleOmsorgsdager.valider() {
     val mangler: MutableSet<Violation> = mutableSetOf<Violation>()
