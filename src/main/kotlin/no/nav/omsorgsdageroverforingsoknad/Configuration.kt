@@ -64,9 +64,9 @@ data class Configuration(val config : ApplicationConfig) {
     }
 
     internal fun<K, V>cache(
-        expiry: Duration = Duration.ofMinutes(config.getRequiredString("nav.cache.expiry_in_minutes", secret = false).toLong())
+        expiry: Duration = Duration.ofMinutes(config.getRequiredString("nav.cache.barn.expiry_in_minutes", secret = false).toLong())
     ) : Cache<K, V> {
-        val maxSize = config.getRequiredString("nav.cache.max_size", secret = false).toLong()
+        val maxSize = config.getRequiredString("nav.cache.barn.max_size", secret = false).toLong()
         return Caffeine.newBuilder()
             .expireAfterWrite(expiry)
             .maximumSize(maxSize)
