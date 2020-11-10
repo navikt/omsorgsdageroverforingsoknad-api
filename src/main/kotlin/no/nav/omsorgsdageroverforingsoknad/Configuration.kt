@@ -41,8 +41,6 @@ data class Configuration(val config : ApplicationConfig) {
         )
     }
 
-    internal fun getBarnCacheExpiryInMinutes() = config.getRequiredString("nav.cache.barn.cache_expiry_in_minutes", secret = false)
-
     internal fun getK9OppslagUrl() = URI(config.getRequiredString("nav.gateways.k9_oppslag_url", secret = false))
 
     internal fun getK9DokumentUrl() = URI(config.getRequiredString("nav.gateways.k9_dokument_url", secret = false))
