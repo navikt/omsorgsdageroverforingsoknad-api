@@ -84,7 +84,7 @@ internal fun SøknadOverføreDager.valider() {
                 parameterName = "harForståttRettigheterOgPlikter",
                 parameterType = ParameterType.ENTITY,
                 reason = "Må ha forstått rettigheter og plikter for å sende inn søknad.",
-                invalidValue = harBekreftetOpplysninger
+                invalidValue = harForståttRettigheterOgPlikter
             )
         )
     }

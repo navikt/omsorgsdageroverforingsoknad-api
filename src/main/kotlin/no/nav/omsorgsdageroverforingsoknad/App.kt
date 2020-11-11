@@ -32,6 +32,8 @@ import no.nav.omsorgsdageroverforingsoknad.barn.barnApis
 import no.nav.omsorgsdageroverforingsoknad.general.auth.IdTokenProvider
 import no.nav.omsorgsdageroverforingsoknad.general.auth.IdTokenStatusPages
 import no.nav.omsorgsdageroverforingsoknad.general.systemauth.AccessTokenClientResolver
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.MeldingDeleOmsorgsdagerMottakGateway
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.MeldingDeleOmsorgsdagerService
 import no.nav.omsorgsdageroverforingsoknad.mellomlagring.MellomlagringService
 import no.nav.omsorgsdageroverforingsoknad.mellomlagring.mellomlagringApis
 import no.nav.omsorgsdageroverforingsoknad.redis.RedisConfig
@@ -117,6 +119,14 @@ fun Application.omsorgsdageroverforingsoknadapi() {
                 apiGatewayApiKey = apiGatewayApiKey
             )
 
+        val meldingDeleOmsorgsdagerMottakGateway =
+            MeldingDeleOmsorgsdagerMottakGateway(
+                baseUrl = configuration.getOmsorgsdageroverforingsoknadMottakBaseUrl(),
+                accessTokenClient = accessTokenClientResolver.accessTokenClient(),
+                sendeSoknadTilProsesseringScopes = configuration.getSendSoknadTilProsesseringScopes(),
+                apiGatewayApiKey = apiGatewayApiKey
+            )
+
         val sokerGateway = SøkerGateway(
             baseUrl = configuration.getK9OppslagUrl(),
             apiGatewayApiKey = apiGatewayApiKey
@@ -125,6 +135,11 @@ fun Application.omsorgsdageroverforingsoknadapi() {
         val barnGateway = BarnGateway(
             baseUrl = configuration.getK9OppslagUrl(),
             apiGatewayApiKey = apiGatewayApiKey
+        )
+
+        val barnService = BarnService(
+            barnGateway = barnGateway,
+            cache = configuration.cache()
         )
 
         val søkerService = SøkerService(
@@ -139,9 +154,7 @@ fun Application.omsorgsdageroverforingsoknadapi() {
             )
 
             barnApis(
-                barnService = BarnService(
-                    barnGateway = barnGateway
-                ),
+                barnService = barnService,
                 idTokenProvider = idTokenProvider
             )
 
@@ -160,7 +173,12 @@ fun Application.omsorgsdageroverforingsoknadapi() {
                 søknadOverføreDagerService = SøknadOverføreDagerService(
                     omsorgsdageroverforingsøknadMottakGateway = omsorgsdageroverforingsøknadMottakGateway,
                     søkerService = søkerService
-                )
+                ),
+                meldingDeleOmsorgsdagerService = MeldingDeleOmsorgsdagerService(
+                    meldingDeleOmsorgsdagerMottakGateway = meldingDeleOmsorgsdagerMottakGateway,
+                    søkerService = søkerService
+                ),
+                barnService = barnService
             )
         }
 

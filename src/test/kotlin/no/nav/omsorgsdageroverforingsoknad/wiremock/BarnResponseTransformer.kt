@@ -43,17 +43,41 @@ private fun getResponse(ident: String): String {
                     "fornavn": "BARN",
                     "mellomnavn": "EN",
                     "etternavn": "BARNESEN",
-                    "aktør_id": "1000000000001"
+                    "aktør_id": "1000000000001",
+                    "identitetsnummer" : "16012099359"
                 }, {
                     "fødselsdato": "2001-04-10",
                     "fornavn": "BARN",
                     "mellomnavn": "TO",
                     "etternavn": "BARNESEN",
-                    "aktør_id": "1000000000002"
+                    "aktør_id": "1000000000002",
+                    "identitetsnummer" : "16012099359"
                 }]
             }
             """.trimIndent()
-        } else -> {
+        }
+        "12125012345" -> {
+            return """
+            {
+                "barn": [{
+                    "fødselsdato": "2000-08-27",
+                    "fornavn": "BARN",
+                    "mellomnavn": "EN",
+                    "etternavn": "BARNESEN",
+                    "aktør_id": "1000000000001",
+                    "identitetsnummer" : "16012099359"
+                }, {
+                    "fødselsdato": "2001-04-10",
+                    "fornavn": "BARN",
+                    "mellomnavn": "TO",
+                    "etternavn": "BARNESEN",
+                    "aktør_id": "1000000000002",
+                    "identitetsnummer" : "16012099359"
+                }]
+            }
+            """.trimIndent()
+        }
+        else -> {
             return """
                 {
                     "barn": []

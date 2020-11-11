@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.matching.AnythingPattern
-import io.ktor.http.HttpHeaders
+import io.ktor.http.*
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 
 internal const val k9OppslagPath = "/helse-reverse-proxy/k9-selvbetjening-oppslag-mock"
@@ -48,6 +48,7 @@ internal fun WireMockServer.stubK9OppslagBarn(simulerFeil: Boolean = false) : Wi
             .withQueryParam("a", equalTo("barn[].mellomnavn"))
             .withQueryParam("a", equalTo("barn[].etternavn"))
             .withQueryParam("a", equalTo("barn[].fødselsdato"))
+            .withQueryParam("a", equalTo("barn[].identitetsnummer"))
             .willReturn(
                 WireMock.aResponse()
                     .withHeader("Content-Type", "application/json")

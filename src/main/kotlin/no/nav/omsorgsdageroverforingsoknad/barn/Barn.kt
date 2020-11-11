@@ -1,5 +1,6 @@
 package no.nav.omsorgsdageroverforingsoknad.barn
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDate
 
 data class BarnResponse(
@@ -11,5 +12,6 @@ data class Barn (
     val fornavn: String?,
     val mellomnavn: String?,
     val etternavn: String?,
-    val aktørId: String?
+    val aktørId: String?,
+    @JsonIgnore var identitetsnummer: String? = null
 )

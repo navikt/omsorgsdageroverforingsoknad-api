@@ -46,6 +46,8 @@ object TestConfiguration {
             map["nav.auth.issuers.1.audience"] = LoginService.V1_0.getAudience()
         }
 
+        map["nav.cache.barn.expiry_in_minutes"] = "30"
+        map["nav.cache.barn.max_size"] = "500"
         map["nav.redis.host"] = "localhost"
         map["nav.redis.port"] = "6379"
         map["nav.storage.passphrase"] = "verySecret"

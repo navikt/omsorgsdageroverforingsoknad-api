@@ -2,30 +2,28 @@ package no.nav.omsorgsdageroverforingsoknad
 
 import com.github.tomakehurst.wiremock.http.Cookie
 import com.typesafe.config.ConfigFactory
-import io.ktor.config.ApplicationConfig
-import io.ktor.config.HoconApplicationConfig
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.testing.TestApplicationEngine
-import io.ktor.server.testing.createTestEnvironment
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.setBody
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.config.*
+import io.ktor.http.*
+import io.ktor.server.testing.*
+import io.ktor.util.*
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.helse.getAuthCookie
+import no.nav.omsorgsdageroverforingsoknad.meldingDeleOmsorgsdager.*
 import no.nav.omsorgsdageroverforingsoknad.redis.RedisMockUtil
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.MAX_ANTALL_DAGER_MAN_KAN_OVERFØRE
 import no.nav.omsorgsdageroverforingsoknad.soknadOverforeDager.MIN_ANTALL_DAGER_MAN_KAN_OVERFØRE
 import no.nav.omsorgsdageroverforingsoknad.wiremock.*
+import org.json.JSONObject
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.skyscreamer.jsonassert.JSONAssert
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
+import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 
 private const val fnr = "290990123456"
@@ -51,9 +49,8 @@ class ApplicationTest {
             .stubK9DokumentHealth()
             .stubOmsorgsoknadMottakHealth()
             .stubOppslagHealth()
-            .stubLeggSoknadTilProsessering("v1/soknad")
             .stubLeggSoknadTilProsessering("v1/soknad/overfore-dager")
-            .stubLeggSoknadTilProsessering("v1/ettersend")
+            .stubLeggSoknadTilProsessering("v1$DELE_DAGER_MOTTAK_URL")
             .stubK9OppslagSoker()
             .stubK9OppslagBarn()
             .stubK9Dokument()
@@ -163,7 +160,7 @@ class ApplicationTest {
                 "barn": []
             }
             """.trimIndent(),
-            cookie = getAuthCookie(fnr)
+            cookie = getAuthCookie(gyldigFodselsnummerA)
         )
         wireMockServer.stubK9OppslagBarn()
     }
@@ -185,10 +182,56 @@ class ApplicationTest {
 """.trimIndent()
 
     @Test
-    fun `Hente soeker`() {
+    fun `Hente søker`() {
         requestAndAssert(
             httpMethod = HttpMethod.Get,
             path = "/soker",
+            expectedCode = HttpStatusCode.OK,
+            expectedResponse = expectedGetSokerJson(fnr)
+        )
+    }
+
+    @Test
+    fun `Hente barn og sjekk eksplisit at identitetsnummer ikke blir med ved get kall`(){
+
+        val respons = requestAndAssert(
+            httpMethod = HttpMethod.Get,
+            path = "/barn",
+            expectedCode = HttpStatusCode.OK,
+            //language=json
+            expectedResponse = """
+                {
+                  "barn": [
+                    {
+                      "fødselsdato": "2000-08-27",
+                      "fornavn": "BARN",
+                      "mellomnavn": "EN",
+                      "etternavn": "BARNESEN",
+                      "aktørId": "1000000000001"
+                    },
+                    {
+                      "fødselsdato": "2001-04-10",
+                      "fornavn": "BARN",
+                      "mellomnavn": "TO",
+                      "etternavn": "BARNESEN",
+                      "aktørId": "1000000000002"
+                    }
+                  ]
+                }
+            """.trimIndent()
+        )
+
+        val responsSomJSONArray = JSONObject(respons).getJSONArray("barn")
+
+        assertFalse(responsSomJSONArray.getJSONObject(0).has("identitetsnummer"))
+        assertFalse(responsSomJSONArray.getJSONObject(1).has("identitetsnummer"))
+    }
+
+    @Test
+    fun `Hente søker for melding av deling av omsorgsdager`() {
+        requestAndAssert(
+            httpMethod = HttpMethod.Get,
+            path = "/sokerMelding",
             expectedCode = HttpStatusCode.OK,
             expectedResponse = expectedGetSokerJson(fnr)
         )
@@ -210,7 +253,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `Sende ettersending ikke myndig`() {
+    fun `Sende overføre-dager ikke myndig`() {
         val cookie = getAuthCookie(ikkeMyndigFnr)
 
         requestAndAssert(
@@ -498,7 +541,224 @@ class ApplicationTest {
         )
     }
 
-    private fun requestAndAssert(
+    @Test
+    fun `Sende gyldig melding om deling av omsorgsdager`(){
+        val cookie = getAuthCookie(fnr)
+
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = DELE_DAGER_API_URL,
+            expectedResponse = null,
+            expectedCode = HttpStatusCode.Accepted,
+            cookie = cookie,
+            requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.somJson()
+        )
+    }
+
+    @Test
+    fun `Sende ugyldig melding om deling av omsorgsdager`(){
+        val cookie = getAuthCookie(gyldigFodselsnummerA)
+
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = DELE_DAGER_API_URL,
+            //language=JSON
+            expectedResponse = """
+                {
+                  "type": "/problem-details/invalid-request-parameters",
+                  "title": "invalid-request-parameters",
+                  "status": 400,
+                  "detail": "Requesten inneholder ugyldige paramtere.",
+                  "instance": "about:blank",
+                  "invalid_parameters": [
+                    {
+                      "type": "entity",
+                      "name": "harBekreftetOpplysninger",
+                      "reason": "Opplysningene må bekreftes for å sende inn søknad.",
+                      "invalid_value": false
+                    },
+                    {
+                      "type": "entity",
+                      "name": "harForståttRettigheterOgPlikter",
+                      "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad.",
+                      "invalid_value": false
+                    }
+                  ]
+                }
+            """.trimIndent(),
+            expectedCode = HttpStatusCode.BadRequest,
+            cookie = cookie,
+            requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.copy(
+                harForståttRettigheterOgPlikter = false,
+                harBekreftetOpplysninger = false
+            ).somJson()
+        )
+    }
+
+    @Test
+    fun `Sende medling om deling av omsorgsdager hvor søker ikke myndig`() {
+        val cookie = getAuthCookie(ikkeMyndigFnr)
+
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = DELE_DAGER_API_URL,
+            expectedResponse = """
+                {
+                    "type": "/problem-details/unauthorized",
+                    "title": "unauthorized",
+                    "status": 403,
+                    "detail": "Søkeren er ikke myndig og kan ikke sende inn søknaden.",
+                    "instance": "about:blank"
+                }
+            """.trimIndent(),
+            expectedCode = HttpStatusCode.Forbidden,
+            cookie = cookie,
+            requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.somJson()
+        )
+    }
+
+    @Test
+    fun `Sende medling om deling av omsorgsdager med flere feil`() {
+        val cookie = getAuthCookie(gyldigFodselsnummerA)
+
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = DELE_DAGER_API_URL,
+            expectedResponse =
+            //language=json
+            """
+                {
+                  "type": "/problem-details/invalid-request-parameters",
+                  "title": "invalid-request-parameters",
+                  "status": 400,
+                  "detail": "Requesten inneholder ugyldige paramtere.",
+                  "instance": "about:blank",
+                  "invalid_parameters": [
+                    {
+                      "type": "entity",
+                      "name": "antallDagerBruktIÅr",
+                      "reason": "antallDagerBruktIÅr må være mellom 0 og $MAX_ANTALL_DAGER_MAN_KAN_HA_DELT_I_ÅR",
+                      "invalid_value": -1
+                    },
+                    {
+                      "type": "entity",
+                      "name": "fnrMottaker",
+                      "reason": "fnrMottaker er ikke gyldig norsk identifikator",
+                      "invalid_value": "ikke gyldig"
+                    },
+                    {
+                      "type": "entity",
+                      "name": "mottakerNavn",
+                      "reason": "mottakerNavn er tomt eller bare whitespace",
+                      "invalid_value": "  "
+                    },
+                    {
+                      "type": "entity",
+                      "name": "antallDagerTilOverføre",
+                      "reason": "antallDagerTilOverføre må være mellom $MIN_ANTALL_DAGER_MAN_KAN_DELE og $MAX_ANTALL_DAGER_MAN_KAN_DELE",
+                      "invalid_value": -1
+                    },
+                    {
+                      "type": "entity",
+                      "name": "aleneOmOmsorgen",
+                      "reason": "aleneOmOmsorgen kan ikke være null",
+                      "invalid_value": null
+                    },
+                    {
+                      "type": "entity",
+                      "name": "utvidetRett",
+                      "reason": "utvidetRett kan ikke være null",
+                      "invalid_value": null
+                    },
+                    {
+                      "type": "entity",
+                      "name": "barn[0].identitetsnummer",
+                      "reason": "identitetsnummer er ikke gyldig norsk identifikator",
+                      "invalid_value": "1"
+                    },
+                    {
+                      "type": "entity",
+                      "name": "borINorge",
+                      "reason": "borINorge kan ikke være null",
+                      "invalid_value": null
+                    },
+                    {
+                      "type": "entity",
+                      "name": "arbeiderINorge",
+                      "reason": "arbeiderINorge kan ikke være null",
+                      "invalid_value": null
+                    }
+                  ]
+                }
+            """.trimIndent(),
+            expectedCode = HttpStatusCode.BadRequest,
+            cookie = cookie,
+            requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.copy(
+                antallDagerSomSkalOverføres = -1,
+                antallDagerBruktIÅr = -1,
+                mottakerFnr = "ikke gyldig",
+                mottakerNavn = "  ",
+                arbeiderINorge = null,
+                borINorge = null,
+                barn = listOf(
+                    BarnUtvidet(
+                        identitetsnummer = "1",
+                        aktørId = null,
+                        fødselsdato = LocalDate.parse("2020-01-01"),
+                        navn = "Barn Barnesen",
+                        aleneOmOmsorgen = null,
+                        utvidetRett = null
+                    )
+                )
+            ).somJson()
+        )
+    }
+
+    @Test
+    fun `Sende melding hvor barn har ugyldig identitetsnummer`(){
+        val cookie = getAuthCookie(fnr)
+
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = DELE_DAGER_API_URL,
+            expectedResponse =
+            //language=json
+            """
+                {
+                  "type": "/problem-details/invalid-request-parameters",
+                  "title": "invalid-request-parameters",
+                  "status": 400,
+                  "detail": "Requesten inneholder ugyldige paramtere.",
+                  "instance": "about:blank",
+                  "invalid_parameters": [
+                    {
+                      "type": "entity",
+                      "name": "barn[0].identitetsnummer",
+                      "reason": "identitetsnummer er ikke gyldig norsk identifikator",
+                      "invalid_value": "Ikke gyldig 111"
+                    }
+                  ]
+                }
+            """.trimIndent(),
+            expectedCode = HttpStatusCode.BadRequest,
+            cookie = cookie,
+            requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.copy(
+                barn = listOf(
+                    BarnUtvidet(
+                        identitetsnummer = "Ikke gyldig 111",
+                        aktørId = null,
+                        fødselsdato = LocalDate.parse("2020-01-01"),
+                        navn = "Barn Barnesen",
+                        aleneOmOmsorgen = true,
+                        utvidetRett = true
+                    )
+                )
+            ).somJson()
+        )
+    }
+
+
+   private fun requestAndAssert(
         httpMethod: HttpMethod,
         path: String,
         requestEntity: String? = null,
@@ -506,7 +766,8 @@ class ApplicationTest {
         expectedCode: HttpStatusCode,
         leggTilCookie: Boolean = true,
         cookie: Cookie = getAuthCookie(fnr)
-    ) {
+    ): String? {
+       val respons: String?
         with(engine) {
             handleRequest(httpMethod, path) {
                 if (leggTilCookie) addHeader(HttpHeaders.Cookie, cookie.toString())
@@ -517,6 +778,7 @@ class ApplicationTest {
             }.apply {
                 logger.info("Response Entity = ${response.content}")
                 logger.info("Expected Entity = $expectedResponse")
+                respons = response.content
                 assertEquals(expectedCode, response.status())
                 if (expectedResponse != null) {
                     JSONAssert.assertEquals(expectedResponse, response.content!!, true)
@@ -525,5 +787,6 @@ class ApplicationTest {
                 }
             }
         }
+       return respons
     }
 }
