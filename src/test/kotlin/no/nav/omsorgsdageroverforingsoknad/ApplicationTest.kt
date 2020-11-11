@@ -636,9 +636,21 @@ class ApplicationTest {
                   "invalid_parameters": [
                     {
                       "type": "entity",
+                      "name": "antallDagerBruktIÅr",
+                      "reason": "antallDagerBruktIÅr må være mellom 0 og $MAX_ANTALL_DAGER_MAN_KAN_HA_DELT_I_ÅR",
+                      "invalid_value": -1
+                    },
+                    {
+                      "type": "entity",
                       "name": "fnrMottaker",
                       "reason": "fnrMottaker er ikke gyldig norsk identifikator",
                       "invalid_value": "ikke gyldig"
+                    },
+                    {
+                      "type": "entity",
+                      "name": "mottakerNavn",
+                      "reason": "mottakerNavn er tomt eller bare whitespace",
+                      "invalid_value": "  "
                     },
                     {
                       "type": "entity",
@@ -648,9 +660,33 @@ class ApplicationTest {
                     },
                     {
                       "type": "entity",
+                      "name": "aleneOmOmsorgen",
+                      "reason": "aleneOmOmsorgen kan ikke være null",
+                      "invalid_value": null
+                    },
+                    {
+                      "type": "entity",
+                      "name": "utvidetRett",
+                      "reason": "utvidetRett kan ikke være null",
+                      "invalid_value": null
+                    },
+                    {
+                      "type": "entity",
                       "name": "barn[0].identitetsnummer",
                       "reason": "identitetsnummer er ikke gyldig norsk identifikator",
                       "invalid_value": "1"
+                    },
+                    {
+                      "type": "entity",
+                      "name": "borINorge",
+                      "reason": "borINorge kan ikke være null",
+                      "invalid_value": null
+                    },
+                    {
+                      "type": "entity",
+                      "name": "arbeiderINorge",
+                      "reason": "arbeiderINorge kan ikke være null",
+                      "invalid_value": null
                     }
                   ]
                 }
@@ -659,15 +695,19 @@ class ApplicationTest {
             cookie = cookie,
             requestEntity = MeldingDeleOmsorgsdagerUtils.meldingDeleOmsorgsdager.copy(
                 antallDagerSomSkalOverføres = -1,
+                antallDagerBruktIÅr = -1,
                 mottakerFnr = "ikke gyldig",
+                mottakerNavn = "  ",
+                arbeiderINorge = null,
+                borINorge = null,
                 barn = listOf(
                     BarnUtvidet(
                         identitetsnummer = "1",
                         aktørId = null,
                         fødselsdato = LocalDate.parse("2020-01-01"),
                         navn = "Barn Barnesen",
-                        aleneOmOmsorgen = true,
-                        utvidetRett = true
+                        aleneOmOmsorgen = null,
+                        utvidetRett = null
                     )
                 )
             ).somJson()
