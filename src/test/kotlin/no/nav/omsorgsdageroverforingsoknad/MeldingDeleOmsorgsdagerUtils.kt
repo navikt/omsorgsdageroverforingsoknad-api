@@ -29,7 +29,6 @@ class MeldingDeleOmsorgsdagerUtils {
                     utvidetRett = false
                 )
             ),
-            borINorge = true,
             arbeiderINorge = true,
             arbeidssituasjon = listOf(
                 Arbeidssituasjon.ARBEIDSTAKER

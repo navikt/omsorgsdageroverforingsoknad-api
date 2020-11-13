@@ -12,7 +12,6 @@ data class KomplettMeldingDeleOmsorgsdager(
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val barn: List<BarnUtvidet>,
-    val borINorge: Boolean,
     val arbeiderINorge: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
     val antallDagerBruktIÅr: Int,
