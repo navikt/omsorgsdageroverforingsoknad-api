@@ -678,12 +678,6 @@ class ApplicationTest {
                     },
                     {
                       "type": "entity",
-                      "name": "borINorge",
-                      "reason": "borINorge kan ikke være null",
-                      "invalid_value": null
-                    },
-                    {
-                      "type": "entity",
                       "name": "arbeiderINorge",
                       "reason": "arbeiderINorge kan ikke være null",
                       "invalid_value": null
@@ -699,7 +693,6 @@ class ApplicationTest {
                 mottakerFnr = "ikke gyldig",
                 mottakerNavn = "  ",
                 arbeiderINorge = null,
-                borINorge = null,
                 barn = listOf(
                     BarnUtvidet(
                         identitetsnummer = "1",

@@ -80,7 +80,6 @@ internal fun MeldingDeleOmsorgsdager.valider() {
     }
 
     mangler.addAll(barn.valider())
-    mangler.addAll(nullSjekk(borINorge, "borINorge"))
     mangler.addAll(nullSjekk(arbeiderINorge, "arbeiderINorge"))
 
     if (mangler.isNotEmpty()) {
