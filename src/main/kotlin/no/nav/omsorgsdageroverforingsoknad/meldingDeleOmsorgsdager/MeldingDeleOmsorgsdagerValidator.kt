@@ -79,8 +79,20 @@ internal fun MeldingDeleOmsorgsdager.valider() {
         )
     }
 
+    if(erYrkesaktiv er false){
+        mangler.add(
+            Violation(
+                parameterName = "erYrkesaktiv",
+                parameterType = ParameterType.ENTITY,
+                reason = "erYrkesaktiv må være satt til true",
+                invalidValue = erYrkesaktiv
+            )
+        )
+    }
+
     mangler.addAll(barn.valider())
     mangler.addAll(nullSjekk(arbeiderINorge, "arbeiderINorge"))
+    mangler.addAll(nullSjekk(erYrkesaktiv, "erYrkesaktiv"))
 
     if (mangler.isNotEmpty()) {
         throw Throwblem(ValidationProblemDetails(mangler))
