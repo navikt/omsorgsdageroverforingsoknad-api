@@ -33,6 +33,7 @@ class MeldingDeleOmsorgsdagerUtils {
             arbeidssituasjon = listOf(
                 Arbeidssituasjon.ARBEIDSTAKER
             ),
+            erYrkesaktiv = true,
             antallDagerBruktIÅr = 10,
             mottakerType = Mottaker.EKTEFELLE,
             mottakerFnr = gyldigfnr,

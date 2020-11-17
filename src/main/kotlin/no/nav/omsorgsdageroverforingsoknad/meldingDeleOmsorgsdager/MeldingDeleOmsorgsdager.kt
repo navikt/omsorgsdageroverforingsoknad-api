@@ -13,9 +13,10 @@ data class MeldingDeleOmsorgsdager(
     val språk: String,
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
-    val arbeiderINorge: Boolean? = null, //Settes til null for å unngå default false,
+    val arbeiderINorge: Boolean? = null, //Settes til null for å unngå default false
     val barn: List<BarnUtvidet>,
     val arbeidssituasjon: List<Arbeidssituasjon>,
+    val erYrkesaktiv: Boolean? = null, //Settes til null for å unngå default false
     val mottakerType: Mottaker,
     val mottakerFnr: String,
     val mottakerNavn: String,
@@ -47,7 +48,8 @@ data class MeldingDeleOmsorgsdager(
             mottakerType = mottakerType,
             mottakerFnr = mottakerFnr,
             mottakerNavn = mottakerNavn,
-            antallDagerSomSkalOverføres = antallDagerSomSkalOverføres
+            antallDagerSomSkalOverføres = antallDagerSomSkalOverføres,
+            erYrkesaktiv = erYrkesaktiv!!
         )
     }
 

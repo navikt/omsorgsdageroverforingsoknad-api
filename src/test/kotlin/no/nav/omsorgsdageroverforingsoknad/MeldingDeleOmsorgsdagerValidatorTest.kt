@@ -135,10 +135,20 @@ internal class MeldingDeleOmsorgsdagerValidatorTest {
         melding.valider()
     }
 
+
     @Test(expected = Throwblem::class)
-    fun `Skal feile dersom arbeiderINorge er false`(){
+    fun `Skal feile dersom erYrkesaktiv er null`(){
         val melding = meldingDeleOmsorgsdager.copy(
-            arbeiderINorge = false
+            erYrkesaktiv = null
+        )
+        melding.valider()
+    }
+
+
+    @Test(expected = Throwblem::class)
+    fun `Skal feile dersom erYrkesaktiv er false`(){
+        val melding = meldingDeleOmsorgsdager.copy(
+            erYrkesaktiv = false
         )
         melding.valider()
     }
